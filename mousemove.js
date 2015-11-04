@@ -17,9 +17,11 @@ pc.script.create("mousemove", function (app) {
 			}, this);
 		},
 		update: function(dt) {
-			this.entity.setLocalEulerAngles(0, this.eulers.x, 0);
-			this.camera.setLocalEulerAngles(this.eulers.y, 0, 0);
-		},
+	        this.entity.setLocalEulerAngles(0, this.eulers.x, 0);
+            this.camera.setLocalEulerAngles(this.eulers.y, 0, 0);
+            this.camera.setPosition(this.entity.getPosition());
+            this.camera.translateLocal(0, 2, 5);
+	    },
 		_onMouseMove: function(e) {
 			if(pc.Mouse.isPointerLocked() || e.buttons[0]) {
 				this.eulers.x -= this.lookSpeed * e.dx;
