@@ -1,6 +1,6 @@
 // player.js
 // move factor attribute
-pc.script.attribute('speed', 'number', 1, {
+pc.script.attribute('speed', 'number', 0.5, {
     min: 0.1,
     max: 1
 });
