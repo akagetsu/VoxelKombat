@@ -28,14 +28,6 @@ pc.script.create("input", function(app) {
             } else if (app.keyboard.isPressed(pc.KEY_E)) {
                 this.player.rotate("right");
             }
-
-            if (app.keyboard.isPressed(pc.KEY_EQUAL)) {
-                this.player.increaseSpeed(0.4 * dt);
-            }
-
-            if (app.keyboard.isPressed(pc.KEY_SEPARATOR)) {
-                this.player.decreaseSpeed(0.4 * dt);
-            }
         }
     };
 

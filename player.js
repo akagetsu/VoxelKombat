@@ -15,16 +15,6 @@ pc.script.create("player", function(app) {
         initialize: function() {
             this.speed = 0.5;
         },
-        increaseSpeed: function(p) {
-            if (this.speed <= 1) {
-                this.speed += p;
-            }
-        },
-        decreaseSpeed: function(p) {
-            if (this.speed >= 0) {
-                this.speed -= p;
-            }
-        },
         strafe: function(direction) {
             if (direction === "left") {
                 this.entity.translateLocal(-this.speed, 0, 0);
