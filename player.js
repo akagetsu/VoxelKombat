@@ -8,6 +8,19 @@ pc.script.attribute('speed', 'number', 1, {
 pc.script.create("player", function(app) {
     var Player = function(entity) {
         this.entity = entity;
+
+        // Disable browser default behaviour when we right click
+        app.mouse.disableContextMenu();
+
+        // Listen for mousemovement and handle it accordingly
+        app.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
+
+        // Listen for mouseclicks and handle them accordingly
+        app.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
+
+        // Listen for keypress events and handle them accordingly
+        app.keyboard.on(pc.EVENT_KEYDOWN, this.onKeyDown, this);
+
     };
 
     Player.prototype = {
@@ -29,15 +42,14 @@ pc.script.create("player", function(app) {
                 this.entity.translateLocal(0, 0, this.speed);
             }
         },
-        rotate: function(direction) {
-            if (direction === "left") {
-                this.entity.rotateLocal(0, this.speed + 1, 0);
-            } else if (direction === "right") {
-                this.entity.rotateLocal(0, -this.speed - 1, 0);
-            }
+        onMouseMove: function(event) {
+
         },
-        getSpeed: function() {
-            return this.speed;
+        onMouseDown: function(event) {
+
+        },
+        onKeyDown: function(event) {
+
         }
     };
 

@@ -22,12 +22,6 @@ pc.script.create("input", function(app) {
             } else if (app.keyboard.isPressed(pc.KEY_S)) {
                 this.player.walk("backward");
             }
-
-            if (app.keyboard.isPressed(pc.KEY_Q)) {
-                this.player.rotate("left");
-            } else if (app.keyboard.isPressed(pc.KEY_E)) {
-                this.player.rotate("right");
-            }
         }
     };
 
