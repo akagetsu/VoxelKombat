@@ -1,7 +1,7 @@
 pc.script.attribute("camera", "entity", null);
 pc.script.attribute("lookSpeed", "number", 0.5);
 
-pc.script.create("mousemove", function (app) {
+pc.script.create("mousemove", function(app) {
 	var Mousemove = function(entity) {
 		this.entity = entity;
 
@@ -17,13 +17,13 @@ pc.script.create("mousemove", function (app) {
 			}, this);
 		},
 		update: function(dt) {
-	        this.entity.setLocalEulerAngles(0, this.eulers.x, 0);
-            this.camera.setLocalEulerAngles(this.eulers.y, 0, 0);
-            this.camera.setPosition(this.entity.getPosition());
-            this.camera.translateLocal(0, 2, 5);
-	    },
+			this.entity.setLocalEulerAngles(0, this.eulers.x, 0);
+			this.camera.setLocalEulerAngles(this.eulers.y, 0, 0);
+			this.camera.setPosition(this.entity.getPosition());
+			this.camera.translateLocal(0, 2, 5);
+		},
 		_onMouseMove: function(e) {
-			if(pc.Mouse.isPointerLocked() || e.buttons[0]) {
+			if (pc.Mouse.isPointerLocked() || e.buttons[0]) {
 				this.eulers.x -= this.lookSpeed * e.dx;
 				this.eulers.y -= this.lookSpeed * e.dy;
 			}

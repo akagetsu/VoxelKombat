@@ -1,14 +1,14 @@
 // input.js
 
-pc.script.create("input", function (app) {
-    var Input = function (entity) {
+pc.script.create("input", function(app) {
+    var Input = function(entity) {
         this.entity = entity;
     };
     Input.prototype = {
         initialize: function() {
-          this.player = this.entity.script.player;
+            this.player = this.entity.script.player;
         },
-        update: function (dt) {
+        update: function(dt) {
             if (app.keyboard.isPressed(pc.KEY_A)) {
                 // Call the move() method on the player script
                 this.player.strafe("left");
@@ -17,24 +17,24 @@ pc.script.create("input", function (app) {
                 this.player.strafe("right");
             }
 
-            if(app.keyboard.isPressed(pc.KEY_W)) {
+            if (app.keyboard.isPressed(pc.KEY_W)) {
                 this.player.walk("forward");
-            } else if(app.keyboard.isPressed(pc.KEY_S)) {
+            } else if (app.keyboard.isPressed(pc.KEY_S)) {
                 this.player.walk("backward");
             }
 
-            if(app.keyboard.isPressed(pc.KEY_Q)) {
+            if (app.keyboard.isPressed(pc.KEY_Q)) {
                 this.player.rotate("left");
-            } else if(app.keyboard.isPressed(pc.KEY_E)){
+            } else if (app.keyboard.isPressed(pc.KEY_E)) {
                 this.player.rotate("right");
             }
 
             if (app.keyboard.isPressed(pc.KEY_EQUAL)) {
-                this.player.increaseSpeed(0.4*dt);
+                this.player.increaseSpeed(0.4 * dt);
             }
 
-            if(app.keyboard.isPressed(pc.KEY_SEPARATOR)) {
-                this.player.decreaseSpeed(0.4*dt);
+            if (app.keyboard.isPressed(pc.KEY_SEPARATOR)) {
+                this.player.decreaseSpeed(0.4 * dt);
             }
         }
     };
