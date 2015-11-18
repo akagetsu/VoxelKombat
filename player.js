@@ -4,9 +4,14 @@ pc.script.attribute('speed', 'number', 0.5, {
     min: 0.1,
     max: 1
 });
+
 pc.script.attribute("lookSpeed", "number", 0.5);
 
+pc.script.attribute("power", "number", 2500);
+
 pc.script.create("player", function(app) {
+    var force = new pc.Vec3();
+
     var Player = function(entity) {
         this.entity = entity;
 
