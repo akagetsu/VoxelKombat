@@ -1,16 +1,12 @@
 // player.js
 // move factor attribute
-pc.script.attribute('speed', 'number', 0.5, {
-    min: 0.1,
-    max: 1
-});
-
 pc.script.attribute("lookSpeed", "number", 0.5);
 
 pc.script.attribute("power", "number", 2500);
 
 pc.script.create("player", function(app) {
-    var force = new pc.Vec3();
+    var direction = new pc.Vec3();
+    var reverseVec = new pc.Vec3(-1,0,-1);
 
     var Player = function(entity) {
         this.entity = entity;
@@ -18,6 +14,7 @@ pc.script.create("player", function(app) {
         this.camera = null;
 
         this.eulers = new pc.Vec3();
+
 
         // Disable browser default behaviour when we right click
         app.mouse.disableContextMenu();
@@ -36,23 +33,9 @@ pc.script.create("player", function(app) {
         },
         update: function(dt) {
             this.handleMovement();
-            this.handleLooking();
+            this.handleCamera();
         },
-        strafe: function(direction) {
-            if (direction === "left") {
-                this.entity.translateLocal(-this.speed, 0, 0);
-            } else if (direction === "right") {
-                this.entity.translateLocal(this.speed, 0, 0);
-            }
-        },
-        walk: function(direction) {
-            if (direction === "forward") {
-                this.entity.translateLocal(0, 0, -this.speed);
-            } else if (direction === "backward") {
-                this.entity.translateLocal(0, 0, this.speed);
-            }
-        },
-        handleLooking: function() {
+        handleCamera: function() {
             this.entity.setLocalEulerAngles(0, this.eulers.x, 0);
             this.camera.setLocalEulerAngles(this.eulers.y, 0, 0);
             this.camera.setPosition(this.entity.getPosition());
@@ -68,16 +51,33 @@ pc.script.create("player", function(app) {
             app.mouse.enablePointerLock();
         },
         handleMovement: function() {
+            var forward = this.entity.forward;
+            var right = this.entity.right;
+            // console.log("camera forward and right:", JSON.parse(this.camera.forward), JSON.parse(this.camera.right));
+
+            var x = 0;
+            var z = 0;
+
             if (app.keyboard.isPressed(pc.KEY_A)) {
-                this.strafe("left");
-            } else if (app.keyboard.isPressed(pc.KEY_D)) {
-                this.strafe("right");
+                direction = right.mul(reverseVec);
+                this.entity.rigidbody.applyForce(direction.normalize().scale(this.power));
+                console.log("right x, right z:", right.x, right.z);
+            }
+
+            if (app.keyboard.isPressed(pc.KEY_D)) {
+                direction = right;
+                this.entity.rigidbody.applyForce(direction.normalize().scale(this.power));
             }
 
             if (app.keyboard.isPressed(pc.KEY_W)) {
-                this.walk("forward");
-            } else if (app.keyboard.isPressed(pc.KEY_S)) {
-                this.walk("backward");
+                direction = forward;
+                this.entity.rigidbody.applyForce(direction.normalize().scale(this.power));
+                console.log("forward x, forward z:", forward.x, forward.z);
+            }
+
+            if (app.keyboard.isPressed(pc.KEY_S)) {
+                direction = forward.mul(reverseVec);
+                this.entity.rigidbody.applyForce(direction.normalize().scale(this.power));
             }
         }
     };
