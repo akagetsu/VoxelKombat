@@ -1,14 +1,13 @@
 // player.js
 // move factor attribute
-pc.script.attribute("lookSpeed", "number", 0.5);
+pc.script.attribute("lookSpeed", "number", 0.9);
 
-pc.script.attribute("power", "number", 2500);
+pc.script.attribute("power", "number", 10000);
 
 pc.script.attribute("camera", "entity", null);
 
 pc.script.create("player", function(app) {
-    var direction = new pc.Vec3();
-    var reverseVec = new pc.Vec3(-1, 0, -1);
+    var force = new pc.Vec3();
 
     var Player = function(entity) {
         this.entity = entity;
@@ -57,23 +56,27 @@ pc.script.create("player", function(app) {
             var z = 0;
 
             if (app.keyboard.isPressed(pc.KEY_A)) {
-                direction = right.mul(reverseVec);
-                this.entity.rigidbody.applyForce(direction.normalize().scale(this.power));
+                x -= right.x;
+                z -= right.z;
             }
-
             if (app.keyboard.isPressed(pc.KEY_D)) {
-                direction = right;
-                this.entity.rigidbody.applyForce(direction.normalize().scale(this.power));
+                x += right.x;
+                z += right.z;
             }
 
             if (app.keyboard.isPressed(pc.KEY_W)) {
-                direction = forward;
-                this.entity.rigidbody.applyForce(direction.normalize().scale(this.power));
+                x += forward.x;
+                z += forward.z;
             }
 
             if (app.keyboard.isPressed(pc.KEY_S)) {
-                direction = forward.mul(reverseVec);
-                this.entity.rigidbody.applyForce(direction.normalize().scale(this.power));
+                x -= forward.x;
+                z -= forward.z;
+            }
+
+            if (x !== 0 && z !== 0) {
+                force.set(x, 0, z).normalize().scale(this.power);
+                this.entity.rigidbody.applyForce(force);
             }
         }
     };
