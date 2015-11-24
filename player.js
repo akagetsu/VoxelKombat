@@ -34,6 +34,8 @@ pc.script.create("player", function(app) {
             this.handleCamera();
             this.handleMovement();
         },
+        // FIXME: this and the onMouseMove need to be moved out to a camera
+        // handler rather than in player
         handleCamera: function() {
             this.camera.setLocalEulerAngles(this.eulers.y, this.eulers.x, 0);
             this.camera.setPosition(this.entity.getPosition());
@@ -43,6 +45,17 @@ pc.script.create("player", function(app) {
             if (pc.Mouse.isPointerLocked() || event.buttons[0]) {
                 this.eulers.x -= this.lookSpeed * event.dx;
                 this.eulers.y -= this.lookSpeed * event.dy;
+                console.log(this.eulers.x, this.eulers.y);
+                // clip camera on top
+                if (this.eulers.y <= -75) {
+                    this.eulers.y = -75;
+                } else if (this.eulers.y >= 45) {
+                    this.eulers.y = 45;
+                }
+                // reset left-right to 0 once a full circle is complete
+                if (this.eulers.x >= 360 || this.eulers.x <= -360) {
+                    this.eulers.x = 0;
+                }
             }
         },
         onMouseDown: function(event) {
