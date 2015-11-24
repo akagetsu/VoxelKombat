@@ -37,15 +37,20 @@ pc.script.create("player", function(app) {
         // FIXME: this and the onMouseMove need to be moved out to a camera
         // handler rather than in player
         handleCamera: function() {
+            var cameraPosition = this.camera.getPosition();
             this.camera.setLocalEulerAngles(this.eulers.y, this.eulers.x, 0);
             this.camera.setPosition(this.entity.getPosition());
             this.camera.translateLocal(0, 2, 10);
+            this.camera.rotateLocal(-15, 0, 0);
+            if (this.camera.getPosition().y <= 0) {
+                this.camera.setPosition(cameraPosition.x, 0, cameraPosition.z);
+            }
         },
         onMouseMove: function(event) {
             if (pc.Mouse.isPointerLocked() || event.buttons[0]) {
                 this.eulers.x -= this.lookSpeed * event.dx;
                 this.eulers.y -= this.lookSpeed * event.dy;
-                console.log(this.eulers.x, this.eulers.y);
+
                 // clip camera on top
                 if (this.eulers.y <= -75) {
                     this.eulers.y = -75;
