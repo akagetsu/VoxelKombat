@@ -31,8 +31,8 @@ pc.script.create("camera", function(app) {
             var cameraPosition = this.entity.getPosition();
             this.entity.setLocalEulerAngles(this.eulers.y, this.eulers.x, 0);
             this.entity.setPosition(this.player.getPosition());
-            this.entity.translateLocal(0, 2, 10);
             this.entity.rotateLocal(-15, 0, 0);
+            this.entity.translateLocal(0, 2, 10);
             if (this.entity.getPosition().y <= 0) {
                 this.entity.setPosition(cameraPosition.x, 0, cameraPosition.z);
             }
