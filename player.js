@@ -1,6 +1,8 @@
 // player.js
 pc.script.attribute("power", "number", 10000);
 
+pc.script.attribute("camera", "entity", null);
+
 pc.script.create("player", function(app) {
     var force = new pc.Vec3();
 
