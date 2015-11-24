@@ -4,9 +4,11 @@ pc.script.attribute("lookSpeed", "number", 0.5);
 
 pc.script.attribute("power", "number", 2500);
 
+pc.script.attribute("camera", "entity", null);
+
 pc.script.create("player", function(app) {
     var direction = new pc.Vec3();
-    var reverseVec = new pc.Vec3(-1,0,-1);
+    var reverseVec = new pc.Vec3(-1, 0, -1);
 
     var Player = function(entity) {
         this.entity = entity;
@@ -28,16 +30,13 @@ pc.script.create("player", function(app) {
 
     Player.prototype = {
         name: "PlayerName",
-        initialize: function() {
-            this.camera = this.entity.findByName("Camera");
-        },
+        initialize: function() {},
         update: function(dt) {
-            this.handleMovement();
             this.handleCamera();
+            this.handleMovement();
         },
         handleCamera: function() {
-            this.entity.setLocalEulerAngles(0, this.eulers.x, 0);
-            this.camera.setLocalEulerAngles(this.eulers.y, 0, 0);
+            this.camera.setLocalEulerAngles(this.eulers.y, this.eulers.x, 0);
             this.camera.setPosition(this.entity.getPosition());
             this.camera.translateLocal(0, 2, 10);
         },
@@ -53,7 +52,6 @@ pc.script.create("player", function(app) {
         handleMovement: function() {
             var forward = this.entity.forward;
             var right = this.entity.right;
-            // console.log("camera forward and right:", JSON.parse(this.camera.forward), JSON.parse(this.camera.right));
 
             var x = 0;
             var z = 0;
@@ -61,7 +59,6 @@ pc.script.create("player", function(app) {
             if (app.keyboard.isPressed(pc.KEY_A)) {
                 direction = right.mul(reverseVec);
                 this.entity.rigidbody.applyForce(direction.normalize().scale(this.power));
-                console.log("right x, right z:", right.x, right.z);
             }
 
             if (app.keyboard.isPressed(pc.KEY_D)) {
@@ -72,7 +69,6 @@ pc.script.create("player", function(app) {
             if (app.keyboard.isPressed(pc.KEY_W)) {
                 direction = forward;
                 this.entity.rigidbody.applyForce(direction.normalize().scale(this.power));
-                console.log("forward x, forward z:", forward.x, forward.z);
             }
 
             if (app.keyboard.isPressed(pc.KEY_S)) {
