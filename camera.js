@@ -1,14 +1,17 @@
+// camera.js
 pc.script.attribute("lookSpeed", "number", 0.9);
 
 pc.script.attribute("player", "entity", null);
 
 pc.script.create("camera", function(app) {
-	var Camera = function(entity) {
-		this.entity = entity; //this is the camera
+    var Camera = function(entity) {
+        this.entity = entity; //this is the camera
 
-		this.eulers = new pc.Vec3();
+        this.eulers = new pc.Vec3();
 
-		// Disable browser default behaviour when we right click
+        this.player = null;
+
+        // Disable browser default behaviour when we right click
         app.mouse.disableContextMenu();
 
         // Listen for mousemovement and handle it accordingly
@@ -16,15 +19,16 @@ pc.script.create("camera", function(app) {
 
         // Listen for mouseclicks and handle them accordingly
         app.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
-	};
+    };
 
-	Camera.prototype = {
-		name: "PlayerCamera",
-		initialize: function() {},
-		update: function(dt) {
-			this.handleCamera();
-		},
-		handleCamera: function() {
+    Camera.prototype = {
+        name: "Camera",
+        initialize: function() {},
+        update: function(dt) {
+            console.log("hello ", dt);
+            this.handleCamera();
+        },
+        handleCamera: function() {
             var cameraPosition = this.entity.getPosition();
             this.entity.setLocalEulerAngles(this.eulers.y, this.eulers.x, 0);
             this.entity.setPosition(this.player.getPosition());
@@ -54,7 +58,7 @@ pc.script.create("camera", function(app) {
         onMouseDown: function(event) {
             app.mouse.enablePointerLock();
         }
-	};
+    };
 
-	return Camera;
+    return Camera;
 });

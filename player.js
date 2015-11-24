@@ -8,7 +8,10 @@ pc.script.create("player", function(app) {
 
     var Player = function(entity) {
         this.entity = entity;
-        };
+
+        this.camera = null;
+
+    };
 
     Player.prototype = {
         name: "PlayerName",
