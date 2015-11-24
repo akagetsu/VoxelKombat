@@ -25,7 +25,6 @@ pc.script.create("camera", function(app) {
         name: "Camera",
         initialize: function() {},
         update: function(dt) {
-            console.log("hello ", dt);
             this.handleCamera();
         },
         handleCamera: function() {
