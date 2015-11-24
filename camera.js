@@ -57,4 +57,6 @@ pc.script.create("camera", function(app) {
             app.mouse.enablePointerLock();
         },
 	};
+
+	return Camera;
 });
