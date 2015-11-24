@@ -4,11 +4,9 @@ pc.script.attribute("player", "entity", null);
 
 pc.script.create("camera", function(app) {
 	var Camera = function(entity) {
-		this.player = entity; //this is the camera
+		this.entity = entity; //this is the camera
 
-		this.player = null;
-
-		this.eulers = new pc.vec3();
+		this.eulers = new pc.Vec3();
 
 		// Disable browser default behaviour when we right click
         app.mouse.disableContextMenu();
@@ -55,7 +53,7 @@ pc.script.create("camera", function(app) {
         },
         onMouseDown: function(event) {
             app.mouse.enablePointerLock();
-        },
+        }
 	};
 
 	return Camera;
