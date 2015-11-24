@@ -50,8 +50,8 @@ pc.script.create("player", function(app) {
             app.mouse.enablePointerLock();
         },
         handleMovement: function() {
-            var forward = this.entity.forward;
-            var right = this.entity.right;
+            var forward = this.camera.forward;
+            var right = this.camera.right;
 
             var x = 0;
             var z = 0;
