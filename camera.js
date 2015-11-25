@@ -16,9 +16,6 @@ pc.script.create("camera", function(app) {
 
         // Listen for mousemovement and handle it accordingly
         app.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
-
-        // Listen for mouseclicks and handle them accordingly
-        app.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
     };
 
     Camera.prototype = {
@@ -53,9 +50,6 @@ pc.script.create("camera", function(app) {
                     this.eulers.x = 0;
                 }
             }
-        },
-        onMouseDown: function(event) {
-            app.mouse.enablePointerLock();
         }
     };
 
