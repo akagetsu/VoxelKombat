@@ -21,7 +21,7 @@ pc.script.create("camera", function(app) {
     Camera.prototype = {
         name: "Camera",
         initialize: function() {},
-        update: function(dt) {
+        postUpdate: function(dt) {
             this.handleCamera();
         },
         handleCamera: function() {
