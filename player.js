@@ -13,6 +13,10 @@ pc.script.create("player", function(app) {
 
         this.camera = null;
 
+        this.releasedJump = true;
+
+        this.pressedJump = false;
+
         // Listen for mouseclicks and handle them accordingly
         app.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
 
@@ -59,10 +63,10 @@ pc.script.create("player", function(app) {
             }
         },
         jump: function() {
-            if(this.pressedJump) {
+            if (this.pressedJump) {
                 jumpForce.set(0, 1, 0).normalize().scale(this.power);
                 this.entity.rigidbody.applyForce(jumpForce);
-            } else if(this.releasedJump && this.entity.getPosition().y >= 0) {
+            } else if (this.releasedJump && this.entity.getPosition().y >= 0) {
                 jumpForce.set(0, -1, 0).normalize().scale(this.power);
                 this.entity.rigidbody.applyForce(jumpForce);
             }
@@ -76,7 +80,7 @@ pc.script.create("player", function(app) {
             }
         },
         onMouseUp: function(event) {
-            if(event.button === pc.MOUSEBUTTON_RIGHT) {
+            if (event.button === pc.MOUSEBUTTON_RIGHT) {
                 this.pressedJump = false;
                 this.releasedJump = true;
             }
