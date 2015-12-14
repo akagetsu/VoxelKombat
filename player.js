@@ -74,6 +74,10 @@ pc.script.create("player", function(app) {
         onMouseDown: function(event) {
             app.mouse.enablePointerLock();
 
+            if(!pc.Mouse.isPointerLocked()) {
+                return;
+            }
+
             if (event.button === pc.MOUSEBUTTON_RIGHT) {
                 this.pressedJump = true;
                 this.releasedJump = false;
