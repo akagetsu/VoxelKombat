@@ -1,12 +1,16 @@
 // player.js
 pc.script.attribute("power", "number", 10000);
 
+pc.script.attribute("projectionModifier", "number", 200);
+
 pc.script.attribute("camera", "entity", null);
 
 pc.script.create("player", function(app) {
     var moveForce = new pc.Vec3();
 
     var jumpForce = new pc.Vec3();
+
+    var projectionForce = new pc.Vec3();
 
     var Player = function(entity) {
         this.entity = entity;
@@ -71,6 +75,11 @@ pc.script.create("player", function(app) {
                 this.entity.rigidbody.applyForce(jumpForce);
             }
         },
+        attack: function() {
+            var forward = this.camera.forward;
+            projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionModifier);
+            this.entity.rigidbody.applyForce(projectionForce);
+        },
         onMouseDown: function(event) {
             app.mouse.enablePointerLock();
 
@@ -81,6 +90,10 @@ pc.script.create("player", function(app) {
             if (event.button === pc.MOUSEBUTTON_RIGHT) {
                 this.pressedJump = true;
                 this.releasedJump = false;
+            }
+
+            if (event.button === pc.MOUSEBUTTON_LEFT) {
+                this.attack();
             }
         },
         onMouseUp: function(event) {
