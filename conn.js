@@ -11,7 +11,7 @@ pc.script.create("conn", function(app) {
 			socket.on('connect', function() {
 				console.log('connected');
 
-				socket.send('hello', {
+				socket.emit('hello', {
 					name: 'Guest'
 				});
 			});
