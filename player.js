@@ -30,7 +30,9 @@ pc.script.create("player", function(app) {
 
     Player.prototype = {
         name: "PlayerName",
-        initialize: function() {},
+        initialize: function() {
+            this.entity.model.materialAsset = app.assets.find("Red");
+        },
         update: function(dt) {
             this.handleMovement();
             this.jump();
@@ -83,7 +85,7 @@ pc.script.create("player", function(app) {
         onMouseDown: function(event) {
             app.mouse.enablePointerLock();
 
-            if(!pc.Mouse.isPointerLocked()) {
+            if (!pc.Mouse.isPointerLocked()) {
                 return;
             }
 
