@@ -31,7 +31,7 @@ pc.script.create("player", function(app) {
     Player.prototype = {
         name: "PlayerName",
         initialize: function() {
-            this.entity.model.materialAsset = app.assets.find("Red");
+            this.entity.model.materialAsset = app.assets.find("Red"); // TODO: Make this Random at some point pls!
         },
         update: function(dt) {
             this.handleMovement();
