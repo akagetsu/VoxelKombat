@@ -1,4 +1,7 @@
 // conn.js
+
+pc.script.attribute("player","entity",null);
+
 pc.script.create("conn", function(app) {
 	var Conn = function(entity) {
 		this.entity = entity;
