@@ -14,19 +14,24 @@ pc.script.create("conn", function(app) {
 			socket.on('connect', function() {
 				console.log('connected');
 
-				socket.emit('user_join', {
-					id: socket.id,
+				socket.emit('request_join', {
 					color: player.model.material.name
 				});
 
-				socket.on('user_join', function(game) {
-					console.log(game);
+				socket.on('user_joined', function(users) {
+					console.log(users);
 					var allUsers;
-					game.user_manager.users.forEach(function(user) {
+					users.forEach(function(user) {
 						allUsers += user.id + "\n";
 					});
 					document.getElementById('ui').innerHTML = "Users:\n" + allUsers;
 				});
+
+				socket.on('refuse_join', function(res) {
+					if (res.status === "Error") {
+						console.error(res.msg);
+					}
+				})
 			});
 		},
 		update: function(dt) {
