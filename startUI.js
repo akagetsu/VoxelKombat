@@ -31,7 +31,6 @@ pc.script.create('startUi', function(app) {
             }
         },
         update: function(dt) {},
-
         connectToGame: function() {
             this.entity.script.conn.connectPlayer();
         }

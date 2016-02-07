@@ -31,7 +31,7 @@ pc.script.create("player", function(app) {
     Player.prototype = {
         name: "PlayerName",
         initialize: function() {
-            this.entity.model.materialAsset = app.assets.find("Red"); // TODO: Make this Random at some point pls!
+            this.entity.model.materialAsset = app.assets.find("Black"); // TODO: Make this Random at some point pls!
         },
         update: function(dt) {
             this.handleMovement();
@@ -83,8 +83,9 @@ pc.script.create("player", function(app) {
             this.entity.rigidbody.applyForce(projectionForce);
         },
         onMouseDown: function(event) {
-            app.mouse.enablePointerLock();
-
+            if(this.entity.enabled) {
+                app.mouse.enablePointerLock();
+            }
             if (!pc.Mouse.isPointerLocked()) {
                 return;
             }

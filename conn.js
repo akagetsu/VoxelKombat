@@ -1,5 +1,4 @@
 // conn.js
-
 pc.script.attribute("player", "entity", null);
 
 pc.script.create("conn", function(app) {
@@ -26,7 +25,9 @@ pc.script.create("conn", function(app) {
 					users.forEach(function(user) {
 						allUsers += user.id + "\n";
 					});
+					player.enabled = true;
 					document.getElementById('ui').innerHTML = "Users:\n" + allUsers;
+					document.getElementById('btn-connect').remove();
 				});
 
 				socket.on('refuse_join', function(res) {
