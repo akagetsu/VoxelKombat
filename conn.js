@@ -8,7 +8,9 @@ pc.script.create("conn", function(app) {
 		this.player = null;
 	};
 	Conn.prototype = {
-		initialize: function() {
+		initialize: function() {},
+		update: function(dt) {},
+		connectPlayer: function() {
 			var socket = this.socket = io("http://localhost:3000");
 			var player = this.player;
 			socket.on('connect', function() {
@@ -33,9 +35,6 @@ pc.script.create("conn", function(app) {
 					}
 				})
 			});
-		},
-		update: function(dt) {
-
 		}
 	};
 	return Conn;
