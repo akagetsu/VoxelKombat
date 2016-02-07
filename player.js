@@ -31,11 +31,14 @@ pc.script.create("player", function(app) {
     Player.prototype = {
         name: "PlayerName",
         initialize: function() {
-            this.entity.model.materialAsset = app.assets.find("Black"); // TODO: Make this Random at some point pls!
         },
         update: function(dt) {
             this.handleMovement();
             this.jump();
+        },
+        setColour: function(colour) {
+            colour = colour[0].toUpperCase() + colour.slice(1);
+            this.entity.model.materialAsset = app.assets.find(colour); // TODO: Make this Random at some point pls!
         },
         handleMovement: function() {
             var forward = this.camera.forward;

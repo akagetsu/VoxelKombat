@@ -15,19 +15,16 @@ pc.script.create("conn", function(app) {
 			socket.on('connect', function() {
 				console.log('connected');
 
-				socket.emit('request_join', {
-					color: player.model.material.name
+				socket.emit('request_join');
+
+				socket.on('accept_join', function(color) {
+					player.enabled = true;
+					player.script.player.setColour(color);
+					document.getElementById('btn-connect').remove();
 				});
 
-				socket.on('user_joined', function(users) {
-					console.log(users);
-					var allUsers;
-					users.forEach(function(user) {
-						allUsers += user.id + "\n";
-					});
-					player.enabled = true;
-					document.getElementById('ui').innerHTML = "Users:\n" + allUsers;
-					document.getElementById('btn-connect').remove();
+				socket.on('user_joined', function(data) {
+					console.log(data);
 				});
 
 				socket.on('refuse_join', function(res) {
