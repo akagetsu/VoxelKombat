@@ -4,7 +4,6 @@ pc.script.attribute("html", "asset", null, {
 pc.script.attribute("css", "asset", null, {
     type: "css"
 });
-pc.script.attribute("connection", "entity", null);
 
 pc.script.create('startUi', function(app) {
     // Creates a new Ui instance
@@ -21,6 +20,8 @@ pc.script.create('startUi', function(app) {
                 div.id = "start-ui";
                 div.innerHTML = asset.resource;
                 document.body.appendChild(div);
+                var btn = document.getElementById("btn-connect");
+                btn.onclick = this.connectToGame.bind(this);
             }
 
             var css = app.assets.get(this.css);
@@ -28,12 +29,12 @@ pc.script.create('startUi', function(app) {
                 style = pc.createStyle(css.resource);
                 document.head.appendChild(style);
             }
-
-            // on-click
         },
+        update: function(dt) {},
 
-        // Called every frame, dt is time in seconds since last update
-        update: function(dt) {}
+        connectToGame: function() {
+            this.entity.script.conn.connectPlayer();
+        }
     };
 
     return StartUi;
