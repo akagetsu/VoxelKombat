@@ -18,8 +18,8 @@ pc.script.create("conn", function(app) {
 					var camera = app.root.findByName('PlayerCamera').clone();
 					var player = app.root.findByName('Player').clone();
 
-					camera.script.camera.init(player);
-					app.root.script.playerControls.init(player, camera);
+					camera.script.cameraControls.init(player);
+					app.root.findByName('Root').script.playerControls.init(player, camera);
 					player.model.materialAsset = app.assets.find(color[0].toUpperCase() + color.slice(1));
 					camera.enabled = true;
 					player.enabled = true;
