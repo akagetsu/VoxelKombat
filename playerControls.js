@@ -3,8 +3,6 @@ pc.script.attribute("power", "number", 10000);
 
 pc.script.attribute("projectionModifier", "number", 200);
 
-pc.script.attribute("player", "entity", null);
-
 pc.script.create("playerControls", function(app) {
     var moveForce = new pc.Vec3();
 
@@ -32,13 +30,18 @@ pc.script.create("playerControls", function(app) {
         name: "PlayerName",
         initialize: function() {
         },
+        init: function(player) {
+            this.player = player;
+        },
         update: function(dt) {
+            if(!this.player)
+                return;
             this.handleMovement();
             this.jump();
         },
         setColour: function(colour) {
             colour = colour[0].toUpperCase() + colour.slice(1);
-            this.camera.model.materialAsset = app.assets.find(colour); // TODO: Make this Random at some point pls!
+            this.player.model.materialAsset = app.assets.find(colour); // TODO: Make this Random at some point pls!
         },
         handleMovement: function() {
             var forward = this.entity.forward;
@@ -68,25 +71,25 @@ pc.script.create("playerControls", function(app) {
 
             if (x !== 0 && z !== 0) {
                 moveForce.set(x, 0, z).normalize().scale(this.power);
-                this.camera.rigidbody.applyForce(moveForce);
+                this.player.rigidbody.applyForce(moveForce);
             }
         },
         jump: function() {
             if (this.pressedJump) {
                 jumpForce.set(0, 1, 0).normalize().scale(this.power);
-                this.camera.rigidbody.applyForce(jumpForce);
-            } else if (this.releasedJump && this.camera.getPosition().y >= 0) {
+                this.player.rigidbody.applyForce(jumpForce);
+            } else if (this.releasedJump && this.player.getPosition().y >= 0) {
                 jumpForce.set(0, -1, 0).normalize().scale(this.power);
-                this.camera.rigidbody.applyForce(jumpForce);
+                this.player.rigidbody.applyForce(jumpForce);
             }
         },
         attack: function() {
             var forward = this.entity.forward;
             projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionModifier);
-            this.camera.rigidbody.applyForce(projectionForce);
+            this.player.rigidbody.applyForce(projectionForce);
         },
         onMouseDown: function(event) {
-            if(this.camera.enabled) {
+            if(this.player.enabled) {
                 app.mouse.enablePointerLock();
             }
             if (!pc.Mouse.isPointerLocked()) {
@@ -110,5 +113,5 @@ pc.script.create("playerControls", function(app) {
         }
     };
 
-    return Player;
+    return PlayerControls;
 });
