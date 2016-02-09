@@ -30,7 +30,7 @@ pc.script.create("conn", function(app) {
 					document.getElementById('btn-connect').remove();
 				});
 
-				socket.on('user_joined', function(data) {
+				socket.on('user_update', function(data) {
 					console.log(data);
 				});
 
