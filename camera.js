@@ -1,8 +1,6 @@
 // camera.js
 pc.script.attribute("lookSpeed", "number", 0.9);
 
-pc.script.attribute("player", "entity", null);
-
 pc.script.create("camera", function(app) {
     var Camera = function(entity) {
         this.entity = entity; //this is the camera
@@ -21,10 +19,17 @@ pc.script.create("camera", function(app) {
     Camera.prototype = {
         name: "Camera",
         initialize: function() {},
+        init: function(player) {
+            this.player = player;
+        },
         postUpdate: function(dt) {
+            if(!this.player)
+                return;
             this.handleCamera();
         },
         handleCamera: function() {
+            if(!this.player)
+                return;
             var cameraPosition = this.entity.getPosition();
             this.entity.setLocalEulerAngles(this.eulers.y, this.eulers.x, 0);
             this.entity.setPosition(this.player.getPosition());
@@ -35,6 +40,8 @@ pc.script.create("camera", function(app) {
             }
         },
         onMouseMove: function(event) {
+            if(!this.player)
+                return;
             if (pc.Mouse.isPointerLocked() || event.buttons[0]) {
                 this.eulers.x -= this.lookSpeed * event.dx;
                 this.eulers.y -= this.lookSpeed * event.dy;
