@@ -1,8 +1,8 @@
-// camera.js
+// cameraControls.js
 pc.script.attribute("lookSpeed", "number", 0.9);
 
-pc.script.create("camera", function(app) {
-    var Camera = function(entity) {
+pc.script.create("cameraControls", function(app) {
+    var CameraControls = function(entity) {
         this.entity = entity; //this is the camera
 
         this.eulers = new pc.Vec3();
@@ -16,8 +16,8 @@ pc.script.create("camera", function(app) {
         app.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
     };
 
-    Camera.prototype = {
-        name: "Camera",
+    CameraControls.prototype = {
+        name: "CameraControls",
         initialize: function() {},
         init: function(player) {
             this.player = player;
@@ -60,5 +60,5 @@ pc.script.create("camera", function(app) {
         }
     };
 
-    return Camera;
+    return CameraControls;
 });
