@@ -1,29 +1,26 @@
 // conn.js
-pc.script.attribute("player", "entity", null);
-
 pc.script.create("conn", function(app) {
 	var Conn = function(entity) {
 		this.entity = entity;
-		this.player = null;
 	};
 	Conn.prototype = {
 		initialize: function() {},
 		update: function(dt) {},
 		connectPlayer: function() {
 			var socket = this.socket = io("http://localhost:3000");
-			var player = this.player;
 			socket.on('connect', function() {
 				console.log('connected');
 
 				socket.emit('request_join');
 
 				socket.on('accept_join', function(color) {
-					player.enabled = true;
-					var camera = app.root.findByName('PlayerCamera');
-					camera.enabled = true;
-					camera.script.playerControls.setColour(color);
-					camera.script.playerControls.init(player);
 					app.root.findByName('StartupCamera').enabled = false;
+					var camera = app.root.findByName('PlayerCamera');
+					var player = app.root.findByName('Player');
+					camera.script.playerControls.init(player);
+					camera.script.playerControls.setColour(color);
+					camera.enabled = true;
+					player.enabled = true;
 
 					document.getElementById('btn-connect').remove();
 				});
