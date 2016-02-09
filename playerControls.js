@@ -40,10 +40,14 @@ pc.script.create("playerControls", function(app) {
             this.jump();
         },
         setColour: function(colour) {
+            if(!this.player)
+                return;
             colour = colour[0].toUpperCase() + colour.slice(1);
             this.player.model.materialAsset = app.assets.find(colour); // TODO: Make this Random at some point pls!
         },
         handleMovement: function() {
+            if(!this.player)
+                return;
             var forward = this.entity.forward;
             var right = this.entity.right;
 
@@ -75,6 +79,8 @@ pc.script.create("playerControls", function(app) {
             }
         },
         jump: function() {
+            if(!this.player)
+                return;
             if (this.pressedJump) {
                 jumpForce.set(0, 1, 0).normalize().scale(this.power);
                 this.player.rigidbody.applyForce(jumpForce);
@@ -84,11 +90,15 @@ pc.script.create("playerControls", function(app) {
             }
         },
         attack: function() {
+            if(!this.player)
+                return;
             var forward = this.entity.forward;
             projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionModifier);
             this.player.rigidbody.applyForce(projectionForce);
         },
         onMouseDown: function(event) {
+            if(!this.player)
+                return;
             if(this.player.enabled) {
                 app.mouse.enablePointerLock();
             }
@@ -106,6 +116,8 @@ pc.script.create("playerControls", function(app) {
             }
         },
         onMouseUp: function(event) {
+            if(!this.player)
+                return;
             if (event.button === pc.MOUSEBUTTON_RIGHT) {
                 this.pressedJump = false;
                 this.releasedJump = true;
