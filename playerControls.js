@@ -15,6 +15,8 @@ pc.script.create("playerControls", function(app) {
 
         this.player = null;
 
+        this.camera = null;
+
         this.releasedJump = true;
 
         this.pressedJump = false;
@@ -30,8 +32,9 @@ pc.script.create("playerControls", function(app) {
         name: "PlayerName",
         initialize: function() {
         },
-        init: function(player) {
+        init: function(player, camera) {
             this.player = player;
+            this.camera = camera;
         },
         update: function(dt) {
             if(!this.player)
@@ -39,17 +42,11 @@ pc.script.create("playerControls", function(app) {
             this.handleMovement();
             this.jump();
         },
-        setColour: function(colour) {
-            if(!this.player)
-                return;
-            colour = colour[0].toUpperCase() + colour.slice(1);
-            this.player.model.materialAsset = app.assets.find(colour); // TODO: Make this Random at some point pls!
-        },
         handleMovement: function() {
-            if(!this.player)
+            if(!this.player || !this.camera)
                 return;
-            var forward = this.entity.forward;
-            var right = this.entity.right;
+            var forward = this.camera.forward;
+            var right = this.camera.right;
 
             var x = 0;
             var z = 0;
@@ -90,9 +87,9 @@ pc.script.create("playerControls", function(app) {
             }
         },
         attack: function() {
-            if(!this.player)
+            if(!this.player || !this.camera)
                 return;
-            var forward = this.entity.forward;
+            var forward = this.camera.forward;
             projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionModifier);
             this.player.rigidbody.applyForce(projectionForce);
         },
