@@ -19,7 +19,12 @@ pc.script.create("conn", function(app) {
 
 				socket.on('accept_join', function(color) {
 					player.enabled = true;
-					player.script.player.setColour(color);
+					var camera = app.root.findByName('PlayerCamera');
+					console.log("The camera is:", camera);
+					camera.enabled = true;
+					camera.script.playerControls.setColour(color);
+					camera.init(player);
+
 					document.getElementById('btn-connect').remove();
 				});
 
