@@ -15,12 +15,16 @@ pc.script.create("conn", function(app) {
 
 				socket.on('accept_join', function(color) {
 					app.root.findByName('StartupCamera').enabled = false;
-					var camera = app.root.findByName('PlayerCamera');
-					var player = app.root.findByName('Player');
+					var camera = app.root.findByName('PlayerCamera').clone();
+					var player = app.root.findByName('Player').clone();
+					camera.script.camera.init(player);
 					camera.script.playerControls.init(player);
 					camera.script.playerControls.setColour(color);
 					camera.enabled = true;
 					player.enabled = true;
+
+					app.root.addChild(player);
+					app.root.addChild(camera);
 
 					document.getElementById('btn-connect').remove();
 				});
