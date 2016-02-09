@@ -17,6 +17,30 @@ pc.script.create("conn", function(app) {
 					app.root.findByName('StartupCamera').enabled = false;
 					var camera = app.root.findByName('PlayerCamera').clone();
 					var player = app.root.findByName('Player').clone();
+					app.systems.script.addComponent(camera, {
+						scripts: [{
+							url: 'playerControls.js',
+							name: 'playerControls',
+							attributes: [{
+								name: 'power',
+								type: 'number',
+								value: 10000
+							}, {
+								name: 'projectionModifier',
+								type: 'number',
+								value: 200
+							}]
+						}, {
+							url: 'cameraControls.js',
+							name: 'cameraControls',
+							attributes: [{
+								name: 'lookSpeed',
+								type: 'number',
+								value: 0.9
+							}]
+						}]
+					});
+					// console.log(camera.script);
 					camera.script.camera.init(player);
 					camera.script.playerControls.init(player);
 					camera.script.playerControls.setColour(color);
