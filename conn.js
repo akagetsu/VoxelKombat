@@ -1,4 +1,5 @@
 // conn.js
+// This whole things needs some serious refactoring and modularity BRO
 pc.script.create("conn", function(app) {
 	var Conn = function(entity) {
 		this.entity = entity;
