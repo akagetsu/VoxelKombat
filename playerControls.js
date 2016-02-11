@@ -21,6 +21,12 @@ pc.script.create("playerControls", function(app) {
 
         this.pressedJump = false;
 
+        this.playerData = {};
+        this.playerData.uuid = '';
+        this.playerData.color = '';
+        this.playerData.pos = null;
+        this.playerData.rot = null;
+
         // Listen for mouseclicks and handle them accordingly
         app.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
 
@@ -30,20 +36,20 @@ pc.script.create("playerControls", function(app) {
 
     PlayerControls.prototype = {
         name: "PlayerName",
-        initialize: function() {
-        },
+        initialize: function() {},
         init: function(player, camera) {
             this.player = player;
             this.camera = camera;
         },
         update: function(dt) {
-            if(!this.player)
+            if (!this.player)
                 return;
             this.handleMovement();
             this.jump();
+            this.updateData();
         },
         handleMovement: function() {
-            if(!this.player || !this.camera)
+            if (!this.player || !this.camera)
                 return;
             var forward = this.camera.forward;
             var right = this.camera.right;
@@ -76,7 +82,7 @@ pc.script.create("playerControls", function(app) {
             }
         },
         jump: function() {
-            if(!this.player)
+            if (!this.player)
                 return;
             if (this.pressedJump) {
                 jumpForce.set(0, 1, 0).normalize().scale(this.power);
@@ -87,16 +93,20 @@ pc.script.create("playerControls", function(app) {
             }
         },
         attack: function() {
-            if(!this.player || !this.camera)
+            if (!this.player || !this.camera)
                 return;
             var forward = this.camera.forward;
             projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionModifier);
             this.player.rigidbody.applyForce(projectionForce);
         },
+        updateData: function() {
+            this.playerData.pos = this.player.getPosition();
+            this.playerData.rot = this.player.getEulerAngles();
+        },
         onMouseDown: function(event) {
-            if(!this.player)
+            if (!this.player)
                 return;
-            if(this.player.enabled) {
+            if (this.player.enabled) {
                 app.mouse.enablePointerLock();
             }
             if (!pc.Mouse.isPointerLocked()) {
@@ -113,7 +123,7 @@ pc.script.create("playerControls", function(app) {
             }
         },
         onMouseUp: function(event) {
-            if(!this.player)
+            if (!this.player)
                 return;
             if (event.button === pc.MOUSEBUTTON_RIGHT) {
                 this.pressedJump = false;
