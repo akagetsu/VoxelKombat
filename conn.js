@@ -4,27 +4,26 @@ pc.script.create("conn", function(app) {
 	var Conn = function(entity) {
 		this.entity = entity;
 		this.playerControls = null;
+		this.player = null;
 	};
 	Conn.prototype = {
 		initialize: function() {},
 		update: function(dt) {},
 		connectPlayer: function() {
 			var socket = this.socket = io.connect("http://localhost:3000");
-			// socket.on('connect', function() {
-			// 	console.log('connected');
 
 			socket.emit('request_join');
 
 			socket.on('accept_join', function(userData) {
 				app.root.findByName('StartupCamera').enabled = false;
 				var camera = app.root.findByName('PlayerCamera').clone();
-				var player = app.root.findByName('Player').clone();
+				var player = this.player = app.root.findByName('Player').clone();
 
 				camera.script.cameraControls.init(player);
 				this.playerControls = app.root.findByName('Root').script.playerControls;
 				this.playerControls.init(player, camera);
-				this.playerControls.playerData.uuid = userData.id;
-				this.playerControls.playerData.color = userData.color;
+				player.playerData.uuid = userData.id;
+				player.playerData.color = userData.color;
 				player.model.materialAsset = this.getMaterialOfColour(userData.color);
 				camera.enabled = true;
 				player.enabled = true;
@@ -33,7 +32,6 @@ pc.script.create("conn", function(app) {
 				app.root.addChild(camera);
 
 				document.getElementById('btn-connect').remove();
-				this.playerControls = app.root.findByName('Root').script.playerControls;
 				this.sendPlayerData();
 			}.bind(this));
 
@@ -49,7 +47,7 @@ pc.script.create("conn", function(app) {
 			// });
 		},
 		sendPlayerData: function() {
-			var data = this.playerControls.playerData;
+			var data = this.player.playerData;
 			this.socket.emit('player_update', data);
 			setTimeout(this.sendPlayerData.bind(this), 100);
 		},

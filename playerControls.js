@@ -21,12 +21,6 @@ pc.script.create("playerControls", function(app) {
 
         this.pressedJump = false;
 
-        this.playerData = {};
-        this.playerData.uuid = '';
-        this.playerData.color = '';
-        this.playerData.pos = null;
-        this.playerData.rot = null;
-
         // Listen for mouseclicks and handle them accordingly
         app.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
 
@@ -46,7 +40,6 @@ pc.script.create("playerControls", function(app) {
                 return;
             this.handleMovement();
             this.jump();
-            this.updateData();
         },
         handleMovement: function() {
             if (!this.player || !this.camera)
@@ -98,10 +91,6 @@ pc.script.create("playerControls", function(app) {
             var forward = this.camera.forward;
             projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionModifier);
             this.player.rigidbody.applyForce(projectionForce);
-        },
-        updateData: function() {
-            this.playerData.pos = this.player.getPosition();
-            this.playerData.rot = this.player.getEulerAngles();
         },
         onMouseDown: function(event) {
             if (!this.player)
