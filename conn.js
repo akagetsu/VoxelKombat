@@ -39,6 +39,8 @@ pc.script.create("conn", function(app) {
 			}.bind(this));
 
 			socket.on('user_update', function(data) {
+				if(!this.player)
+					return;
 				if (data.length === 0)
 					return;
 				for (var p = 0; p < data.length; p++) {
