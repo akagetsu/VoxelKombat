@@ -39,7 +39,7 @@ pc.script.create("conn", function(app) {
 			}.bind(this));
 
 			socket.on('user_update', function(data) {
-				if(!this.player)
+				if (!this.player)
 					return;
 				if (data.length === 0)
 					return;
@@ -91,7 +91,8 @@ pc.script.create("conn", function(app) {
 		updateOtherPlayer: function(op) {
 			var p = op.script.playerData.data.pos;
 			var r = op.script.playerData.data.rot;
-			op.rigidbody.teleport(p, r);
+			op.rigidbody.teleport(p);
+			op.setLocalRotation(r);
 		}
 	};
 	return Conn;

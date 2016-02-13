@@ -12,7 +12,7 @@ pc.script.create('playerData', function(app) {
 		initialize: function() {},
 		update: function(dt) {
 			this.data.pos = this.entity.getPosition();
-			this.data.rot = this.entity.getEulerAngles();
+			this.data.rot = this.entity.getLocalRotation();
 		}
 	};
 
