@@ -39,10 +39,9 @@ pc.script.create("conn", function(app) {
 			}.bind(this));
 
 			socket.on('user_update', function(data) {
-				console.log(this.player.name);
 				if (data.length === 0)
 					return;
-				for (var p in data) {
+				for (var p = 0; p < data.length; p++) {
 					var playerData = data[p];
 
 					var alreadyHere = this.otherPlayers.filter(function(p) {
@@ -50,7 +49,7 @@ pc.script.create("conn", function(app) {
 					});
 
 					if (alreadyHere.length === 0 &&
-						playerData.uuid != this.player.script.playerData.data.uuid) {
+						playerData.uuid !== this.player.script.playerData.data.uuid) {
 						var newPlayer = {};
 						try {
 							newPlayer = app.root.findByName('Player').clone();
@@ -64,9 +63,10 @@ pc.script.create("conn", function(app) {
 						newPlayer.script.playerData.data = playerData;
 						app.root.addChild(newPlayer);
 						this.otherPlayers.push(newPlayer);
-					} else if (alreadyHere.length != 0 &&
-						playerData.uuid != this.player.script.playerData.data.uuid) {
+					} else if (alreadyHere.length !== 0 &&
+						playerData.uuid !== this.player.script.playerData.data.uuid) {
 						alreadyHere[0].script.playerData.data = playerData;
+						console.log("playerdata: ", playerData, " \n\n\n and already here data: ", alreadyHere[0].script.playerData.data);
 						this.updateOtherPlayer(alreadyHere[0]);
 					}
 				}
@@ -87,8 +87,7 @@ pc.script.create("conn", function(app) {
 			return app.assets.find(color[0].toUpperCase() + color.slice(1));
 		},
 		updateOtherPlayer: function(op) {
-			if (!op.script.playerData.data.pos)
-				return;
+			console.log(JSON.stringify(op.script.playerData.data, 2, null));
 			var p = new pc.Vec3(op.script.playerData.data.pos.x, op.script.playerData.data.pos.y, op.script.playerData.data.pos.z);
 			var r = new pc.Vec3(op.script.playerData.data.rot.x, op.script.playerData.data.rot.y, op.script.playerData.data.rot.z);
 			op.rigidbody.teleport(p, r);
