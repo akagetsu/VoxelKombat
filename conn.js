@@ -55,6 +55,7 @@ pc.script.create("conn", function(app) {
 							newPlayer = app.root.findByName('Player').clone();
 							newPlayer.enabled = true;
 							newPlayer.rigidbody.linearFactor = new pc.Vec3(0, 0, 0);
+							newPlayer.model.materialAsset = this.getMaterialOfColour(playerData.color);
 							newPlayer.name = 'Other Player';
 						} catch (e) {
 							console.error(e);
