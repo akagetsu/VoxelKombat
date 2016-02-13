@@ -69,7 +69,6 @@ pc.script.create("conn", function(app) {
 					} else if (alreadyHere.length !== 0 &&
 						playerData.uuid !== this.player.script.playerData.data.uuid) {
 						alreadyHere[0].script.playerData.data = playerData;
-						console.log("playerdata: ", playerData, " \n\n\n and already here data: ", alreadyHere[0].script.playerData.data);
 						this.updateOtherPlayer(alreadyHere[0]);
 					}
 				}
@@ -90,9 +89,8 @@ pc.script.create("conn", function(app) {
 			return app.assets.find(color[0].toUpperCase() + color.slice(1));
 		},
 		updateOtherPlayer: function(op) {
-			console.log(JSON.stringify(op.script.playerData.data, 2, null));
-			var p = new pc.Vec3(op.script.playerData.data.pos.x, op.script.playerData.data.pos.y, op.script.playerData.data.pos.z);
-			var r = new pc.Vec3(op.script.playerData.data.rot.x, op.script.playerData.data.rot.y, op.script.playerData.data.rot.z);
+			var p = op.script.playerData.data.pos;
+			var r = op.script.playerData.data.rot;
 			op.rigidbody.teleport(p, r);
 		}
 	};
