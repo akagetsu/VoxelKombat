@@ -4,6 +4,7 @@ pc.script.create('playerData', function(app) {
 		this.data = {};
 		this.data.uuid = '';
 		this.data.color = '';
+		this.data.gameId = '';
 		this.data.pos = new pc.Vec3();
 		this.data.rot = new pc.Vec3();
 	};

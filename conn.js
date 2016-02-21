@@ -26,6 +26,7 @@ pc.script.create("conn", function(app) {
 				this.playerControls.init(this.player, camera);
 				this.player.script.playerData.data.uuid = userData.uuid;
 				this.player.script.playerData.data.color = userData.color;
+				this.player.script.playerData.data.gameId = userData.gameId;
 				this.player.model.materialAsset = this.getMaterialOfColour(userData.color);
 				camera.enabled = true;
 				this.player.enabled = true;
