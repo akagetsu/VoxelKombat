@@ -5,7 +5,7 @@ pc.script.create("conn", function(app) {
 		this.entity = entity;
 		this.playerControls = null;
 		this.player = null;
-		this.otherPlayers = [];
+		this.otherPlayers = {};
 		this.gameState = null;
 	};
 	Conn.prototype = {
@@ -14,83 +14,84 @@ pc.script.create("conn", function(app) {
 		connectPlayer: function() {
 			var socket = this.socket = io.connect("http://localhost:3000");
 
+			// Send request to join server
 			socket.emit('request_join');
 
-			socket.on('accept_join', function(userData) {
-				app.root.findByName('StartupCamera').enabled = false;
-				var camera = app.root.findByName('PlayerCamera').clone();
-				this.player = app.root.findByName('Player').clone();
+			// Create player locally
+			socket.on('accept_join', this.playerCreation.bind(this));
 
-				camera.script.cameraControls.init(this.player);
-				this.playerControls = app.root.findByName('Root').script.playerControls;
-				this.playerControls.init(this.player, camera);
-				this.player.script.playerData.data.uuid = userData.uuid;
-				this.player.script.playerData.data.color = userData.color;
-				this.player.script.playerData.data.gameId = userData.gameId;
-				this.player.model.materialAsset = this.getMaterialOfColour(userData.color);
-				this.player.setPosition(this.getColorPosition(userData.color));
-				camera.enabled = true;
-				this.player.enabled = true;
+			// Perform updates on opponents
+			socket.on('user_update', this.opponentUpdate.bind(this));
 
-				app.root.addChild(this.player);
-				app.root.addChild(camera);
+			// Remove opponent upon disconnect
+			socket.on('remove_user', this.opponentRemove.bind(this));
 
-				document.getElementById('btn-connect').remove();
-
-				this.sendPlayerData();
-			}.bind(this));
-
-			socket.on('user_update', function(data) {
-				if (!this.player)
-					return;
-				if (data.length === 0)
-					return;
-				for (var p = 0; p < data.length; p++) {
-					var playerData = data[p];
-
-					var alreadyHere = this.otherPlayers.filter(function(p) {
-						return p.script.playerData.data.uuid === playerData.uuid;
-					});
-
-					if (alreadyHere.length === 0 &&
-						playerData.uuid !== this.player.script.playerData.data.uuid) {
-						var newPlayer = {};
-						try {
-							newPlayer = app.root.findByName('Player').clone();
-							newPlayer.enabled = true;
-							newPlayer.rigidbody.linearFactor = new pc.Vec3(0, 0, 0);
-							newPlayer.model.materialAsset = this.getMaterialOfColour(playerData.color);
-							newPlayer.name = 'Other Player';
-						} catch (e) {
-							console.error(e);
-						}
-
-						newPlayer.script.playerData.data = playerData;
-						app.root.addChild(newPlayer);
-						this.otherPlayers.push(newPlayer);
-					} else if (alreadyHere.length !== 0 &&
-						playerData.uuid !== this.player.script.playerData.data.uuid) {
-						alreadyHere[0].script.playerData.data = playerData;
-						this.updateOtherPlayer(alreadyHere[0]);
-					}
-				}
-			}.bind(this));
-
-			socket.on('remove_user', function(id) {
-				for (var u = 0; u < this.otherPlayers.length; u++) {
-					if (this.otherPlayers[u].script.playerData.data.uuid === id) {
-						this.otherPlayers[u].destroy();
-						delete this.otherPlayers[u];
-						this.otherPlayers.splice(u, 1);
-					}
-				}
-			}.bind(this));
-
+			// Deal with refusal if server doesn't like you
 			socket.on('refuse_join', function(res) {
 				if (res.status === "Error") {
 					console.error(res.msg);
 				}
 			});
+		},
+		playerCreation: function(userData) {
+			app.root.findByName('StartupCamera').enabled = false;
+			var camera = app.root.findByName('PlayerCamera').clone();
+			this.player = app.root.findByName('Player').clone();
+
+			camera.script.cameraControls.init(this.player);
+			this.playerControls = app.root.findByName('Root').script.playerControls;
+			this.playerControls.init(this.player, camera);
+			this.player.script.playerData.data.uuid = userData.uuid;
+			this.player.script.playerData.data.color = userData.color;
+			this.player.script.playerData.data.gameId = userData.gameId;
+			this.player.model.materialAsset = this.getMaterialOfColour(userData.color);
+			this.player.setPosition(this.getColorPosition(userData.color));
+			camera.enabled = true;
+			this.player.enabled = true;
+
+			app.root.addChild(this.player);
+			app.root.addChild(camera);
+
+			document.getElementById('btn-connect').remove();
+
+			this.sendPlayerData();
+		},
+		opponentUpdate: function(users) {
+			if (!this.player)
+				return;
+			if (Object.keys(users).length === 0)
+				return;
+			for (var uuid in users) {
+				var playerData = users[uuid];
+
+				var alreadyHere = this.otherPlayers[uuid];
+
+				if (!alreadyHere && uuid !== this.player.script.playerData.data.uuid) {
+					var newPlayer = {};
+					try {
+						newPlayer = app.root.findByName('Player').clone();
+						newPlayer.enabled = true;
+						newPlayer.rigidbody.linearFactor = new pc.Vec3(0, 0, 0);
+						newPlayer.model.materialAsset = this.getMaterialOfColour(playerData.color);
+						newPlayer.name = 'Other Player';
+					} catch (e) {
+						console.error(e);
+					}
+
+					newPlayer.script.playerData.data = playerData;
+					app.root.addChild(newPlayer);
+					this.otherPlayers[uuid] = newPlayer;
+				} else if (alreadyHere && uuid !== this.player.script.playerData.data.uuid) {
+					alreadyHere.script.playerData.data = playerData;
+					this.updateOtherPlayer(alreadyHere);
+				}
+			}
+		},
+		opponentRemove: function(id) {
+			if (this.otherPlayers[id]) {
+				this.otherPlayers[id].destroy();
+				delete this.otherPlayers[id];
+			}
 		},
 		sendPlayerData: function() {
 			var data = this.player.script.playerData.data;
