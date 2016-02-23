@@ -28,6 +28,7 @@ pc.script.create("conn", function(app) {
 				this.player.script.playerData.data.color = userData.color;
 				this.player.script.playerData.data.gameId = userData.gameId;
 				this.player.model.materialAsset = this.getMaterialOfColour(userData.color);
+				this.player.setPosition(this.getColorPosition(userData.color));
 				camera.enabled = true;
 				this.player.enabled = true;
 
@@ -104,6 +105,18 @@ pc.script.create("conn", function(app) {
 			var r = op.script.playerData.data.rot;
 			op.rigidbody.teleport(p);
 			op.setLocalRotation(r);
+		},
+		getColorPosition: function(color) {
+			switch (color) {
+				case "red":
+					return new pc.Vec3(-118, 0, 100);
+				case "blue":
+					return new pc.Vec3(-118, 0, -100);
+				case "green":
+					return new pc.Vec3(118, 0, -100);
+				default:
+					return new pc.Vec3(118, 0, 100);
+			}
 		}
 	};
 	return Conn;
