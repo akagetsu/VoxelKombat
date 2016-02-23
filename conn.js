@@ -14,8 +14,14 @@ pc.script.create("conn", function(app) {
 		connectPlayer: function() {
 			var socket = this.socket = io.connect("http://localhost:3000");
 
-			// Send request to join server
-			socket.emit('request_join');
+			if (localStorage) {
+				var playerData = JSON.parse(localStorage.getItem("playerData"));
+				if (playerData) {
+					socket.emit('request_join', playerData);
+				} else {
+					socket.emit('request_join');
+				}
+			}
 
 			// Create player locally
 			socket.on('accept_join', this.playerCreation.bind(this));
@@ -34,6 +40,9 @@ pc.script.create("conn", function(app) {
 			});
 		},
 		playerCreation: function(userData) {
+			if(localStorage) {
+				localStorage.setItem("playerData", JSON.stringify(userData, 2, null));
+			}
 			app.root.findByName('StartupCamera').enabled = false;
 			var camera = app.root.findByName('PlayerCamera').clone();
 			this.player = app.root.findByName('Player').clone();
