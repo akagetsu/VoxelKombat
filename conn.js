@@ -76,11 +76,11 @@ pc.script.create("conn", function(app) {
 			}.bind(this));
 
 			socket.on('remove_user', function(id) {
-				for (var u = 0; u <= this.otherPlayers.length; u++) {
+				for (var u = 0; u < this.otherPlayers.length; u++) {
 					if (this.otherPlayers[u].script.playerData.data.uuid === id) {
 						this.otherPlayers[u].destroy();
 						delete this.otherPlayers[u];
-						this.otherPlayers.splice(u,1);
+						this.otherPlayers.splice(u, 1);
 					}
 				}
 			}.bind(this));
