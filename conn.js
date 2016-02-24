@@ -40,7 +40,7 @@ pc.script.create("conn", function(app) {
 			});
 		},
 		playerCreation: function(userData) {
-			if(localStorage) {
+			if (localStorage) {
 				localStorage.setItem("playerData", JSON.stringify(userData, 2, null));
 			}
 			app.root.findByName('StartupCamera').enabled = false;
@@ -54,12 +54,13 @@ pc.script.create("conn", function(app) {
 			this.player.script.playerData.data.color = userData.color;
 			this.player.script.playerData.data.gameId = userData.gameId;
 			this.player.model.materialAsset = this.getMaterialOfColour(userData.color);
-			this.player.setPosition(this.getColorPosition(userData.color));
+			this.player.script.playerData.setColorPosition(userData.color);
 			camera.enabled = true;
 			this.player.enabled = true;
 
 			app.root.addChild(this.player);
 			app.root.addChild(camera);
+
 
 			document.getElementById('start-ui').remove();
 
@@ -110,23 +111,6 @@ pc.script.create("conn", function(app) {
 		getMaterialOfColour: function(color) {
 			return app.assets.find(color[0].toUpperCase() + color.slice(1));
 		},
-		updateOtherPlayer: function(op) {
-			var p = op.script.playerData.data.pos;
-			var r = op.script.playerData.data.rot;
-			op.rigidbody.teleport(p);
-			op.setLocalRotation(r);
-		},
-		getColorPosition: function(color) {
-			switch (color) {
-				case "red":
-					return new pc.Vec3(-118, 0, 100);
-				case "blue":
-					return new pc.Vec3(-118, 0, -100);
-				case "green":
-					return new pc.Vec3(118, 0, -100);
-				default:
-					return new pc.Vec3(118, 0, 100);
-			}
 		}
 	};
 	return Conn;
