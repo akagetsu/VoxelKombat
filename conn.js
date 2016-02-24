@@ -92,8 +92,7 @@ pc.script.create("conn", function(app) {
 					app.root.addChild(newPlayer);
 					this.otherPlayers[uuid] = newPlayer;
 				} else if (alreadyHere && uuid !== this.player.script.playerData.data.uuid) {
-					alreadyHere.script.playerData.data = playerData;
-					this.updateOtherPlayer(alreadyHere);
+					alreadyHere.script.playerData.setData(playerData);
 				}
 			}
 		},
@@ -111,7 +110,6 @@ pc.script.create("conn", function(app) {
 		getMaterialOfColour: function(color) {
 			return app.assets.find(color[0].toUpperCase() + color.slice(1));
 		},
-		}
-	};
+	}
 	return Conn;
 });
