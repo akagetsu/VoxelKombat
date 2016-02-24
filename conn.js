@@ -61,7 +61,7 @@ pc.script.create("conn", function(app) {
 			app.root.addChild(this.player);
 			app.root.addChild(camera);
 
-			document.getElementById('btn-connect').remove();
+			document.getElementById('start-ui').remove();
 
 			this.sendPlayerData();
 		},
