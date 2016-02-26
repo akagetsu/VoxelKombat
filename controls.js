@@ -42,7 +42,7 @@ pc.script.create("controls", function(app) {
             this.player = player;
         },
         update: function(dt) {
-            if(!this.player)
+            if (!this.player)
                 return;
             this.handleMovement();
             this.jump();
@@ -130,8 +130,9 @@ pc.script.create("controls", function(app) {
         attack: function() {
             if (!this.player)
                 return;
+            this.player.rigidbody.linearVelocity = new pc.Vec3(0, 0, 0);
             var forward = this.entity.forward;
-            projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionModifier);
+            projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionMod);
             this.player.rigidbody.applyForce(projectionForce);
         },
         onMouseDown: function(event) {
