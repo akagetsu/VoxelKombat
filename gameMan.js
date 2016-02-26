@@ -1,0 +1,74 @@
+// Main game manager script
+pc.script.create("gameMan", function(app) {
+	var GameMan = function(entity) {
+		this.entity = entity;
+		this.player = null;
+		this.otherPlayers = {};
+		this.gameState = null;
+		this.uiScript = this.entity.script.ui;
+	};
+	GameMan.prototype = {
+		initialize: function() {
+			this.uiScript.showStart(this.entity.script.conn.playerConn);
+		},
+		update: function(dt) {},
+		playerCreation: function(userData) {
+			if (localStorage) {
+				localStorage.setItem("playerData", JSON.stringify(userData, 2, null));
+			}
+			app.root.findByName('StartupCamera').enabled = false;
+			var camera = app.root.findByName('PlayerCamera').clone();
+			this.player = app.root.findByName('Player').clone();
+
+			camera.script.controls.init(this.player);
+			this.player.script.playerData.setup(userData);
+			camera.enabled = true;
+			this.player.enabled = true;
+
+			app.root.addChild(this.player);
+			app.root.addChild(camera);
+
+			this.uiScript.removeStart();
+			this.uiScript.showHUD();
+
+			this.entity.script.conn.sendPlayerData();
+		},
+		opponentUpdate: function(users) {
+			if (!this.player)
+				return;
+			if (Object.keys(users).length === 0)
+				return;
+			for (var uuid in users) {
+				var playerData = users[uuid];
+
+				var alreadyHere = this.otherPlayers[uuid];
+
+				if (!alreadyHere && !this.player.script.playerData.checkUUID(uuid)) {
+					var newPlayer = {};
+					try {
+						newPlayer = app.root.findByName('Player').clone();
+						newPlayer.enabled = true;
+						newPlayer.rigidbody.linearFactor = new pc.Vec3(0, 0, 0);
+						newPlayer.name = 'Other Player';
+						newPlayer.script.playerData.setup(playerData);
+					} catch (e) {
+						console.error(e);
+					}
+					app.root.addChild(newPlayer);
+					this.otherPlayers[uuid] = newPlayer;
+				} else if (alreadyHere && !this.player.script.playerData.checkUUID(uuid)) {
+					alreadyHere.script.playerData.setData(playerData);
+				}
+			}
+		},
+		opponentRemove: function(id) {
+			if (this.otherPlayers[id]) {
+				this.otherPlayers[id].destroy();
+				delete this.otherPlayers[id];
+			}
+		}
+
+	};
+
+	return GameMan;
+});
