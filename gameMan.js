@@ -5,11 +5,10 @@ pc.script.create("gameMan", function(app) {
 		this.player = null;
 		this.otherPlayers = {};
 		this.gameState = null;
-		this.uiScript = this.entity.script.ui;
 	};
 	GameMan.prototype = {
 		initialize: function() {
-			this.uiScript.showStart(this.entity.script.conn.playerConn);
+			this.entity.script.ui.showStart();
 		},
 		update: function(dt) {},
 		playerCreation: function(userData) {
@@ -28,10 +27,10 @@ pc.script.create("gameMan", function(app) {
 			app.root.addChild(this.player);
 			app.root.addChild(camera);
 
-			this.uiScript.removeStart();
-			this.uiScript.showHUD();
+			this.entity.script.ui.removeStart();
+			this.entity.script.ui.showHUD();
 
-			this.entity.script.conn.sendPlayerData();
+			this.playerUpdate();
 		},
 		opponentUpdate: function(users) {
 			if (!this.player)
@@ -66,6 +65,11 @@ pc.script.create("gameMan", function(app) {
 				this.otherPlayers[id].destroy();
 				delete this.otherPlayers[id];
 			}
+		},
+		playerUpdate: function() {
+			var data = this.player.script.playerData.getData();
+			this.entity.script.conn.sendPlayerData(data);
+			setTimeout(this.playerUpdate.bind(this), 100);
 		}
 
 	};

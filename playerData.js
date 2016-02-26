@@ -20,8 +20,8 @@ pc.script.create('playerData', function(app) {
 			this.data.socketid = data.socketid;
 			this.data.color = data.color;
 			this.data.gameId = data.gameId;
-			this.setColorMaterial();
-			this.setColorPosition();
+			this.setColorMaterial(data.color);
+			this.setColorPosition(data.color);
 		},
 		setData: function(newData) {
 			if (!newData)

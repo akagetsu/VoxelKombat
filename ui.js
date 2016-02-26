@@ -31,13 +31,13 @@ pc.script.create('ui', function(app) {
         },
         // Called every frame, dt is time in seconds since last update
         update: function(dt) {},
-        showStart: function(callback) {
+        showStart: function() {
             var asset = app.assets.get(this.start);
             if (asset) {
                 this.start = document.createElement("div");
                 this.start.id = "start-ui";
                 this.start.innerHTML = asset.resource;
-                this.start.getElementsByClassName("btn-connect")[0].onclick = callback;
+                this.start.getElementsByClassName("btn-connect")[0].onclick = this.performConn.bind(this);
                 document.body.appendChild(this.start);
             }
         },
@@ -55,6 +55,9 @@ pc.script.create('ui', function(app) {
         },
         removeHUD: function() {
             this.hud.remove();
+        },
+        performConn: function() {
+            this.entity.script.conn.playerConn();
         }
     };
 
