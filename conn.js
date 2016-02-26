@@ -3,7 +3,6 @@
 pc.script.create("conn", function(app) {
 	var Conn = function(entity) {
 		this.entity = entity;
-		this.playerControls = null;
 		this.player = null;
 		this.otherPlayers = {};
 		this.gameState = null;
@@ -47,9 +46,7 @@ pc.script.create("conn", function(app) {
 			var camera = app.root.findByName('PlayerCamera').clone();
 			this.player = app.root.findByName('Player').clone();
 
-			camera.script.cameraControls.init(this.player);
-			this.playerControls = app.root.findByName('Root').script.playerControls;
-			this.playerControls.init(this.player, camera);
+			camera.script.controls.init(this.player);
 			this.player.script.playerData.data.uuid = userData.uuid;
 			this.player.script.playerData.data.color = userData.color;
 			this.player.script.playerData.data.gameId = userData.gameId;
