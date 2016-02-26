@@ -8,7 +8,9 @@ pc.script.create("conn", function(app) {
 		this.gameState = null;
 	};
 	Conn.prototype = {
-		initialize: function() {},
+		initialize: function() {
+			this.entity.script.ui.showStart(this.connectPlayer);
+		},
 		update: function(dt) {},
 		connectPlayer: function() {
 			var socket = this.socket = io.connect("http://localhost:3000");
@@ -107,6 +109,7 @@ pc.script.create("conn", function(app) {
 		getMaterialOfColour: function(color) {
 			return app.assets.find(color[0].toUpperCase() + color.slice(1));
 		},
-	}
+	};
+
 	return Conn;
 });

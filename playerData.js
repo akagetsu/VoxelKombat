@@ -16,7 +16,7 @@ pc.script.create('playerData', function(app) {
 			this.data.rot = this.entity.getLocalRotation();
 		},
 		setData: function(newData) {
-			if(!newData)
+			if (!newData)
 				return;
 			this.data = newData;
 			var p = newData.pos;
