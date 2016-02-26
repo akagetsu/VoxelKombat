@@ -15,6 +15,14 @@ pc.script.create('playerData', function(app) {
 			this.data.pos = this.entity.getPosition();
 			this.data.rot = this.entity.getLocalRotation();
 		},
+		setup: function(data) {
+			this.data.uuid = data.uuid;
+			this.data.socketid = data.socketid;
+			this.data.color = data.color;
+			this.data.gameId = data.gameId;
+			this.setColorMaterial();
+			this.setColorPosition();
+		},
 		setData: function(newData) {
 			if (!newData)
 				return;
@@ -23,6 +31,9 @@ pc.script.create('playerData', function(app) {
 			var r = newData.rot;
 			this.entity.rigidbody.teleport(p);
 			this.entity.setLocalRotation(r);
+		},
+		setColorMaterial: function(color) {
+			this.entity.model.materialAsset = app.assets.find(color[0].toUpperCase() + color.slice(1));
 		},
 		setColorPosition: function(color) {
 			if (!color)
@@ -41,6 +52,12 @@ pc.script.create('playerData', function(app) {
 					this.entity.setPosition(new pc.Vec3(118, 0, 100));
 					break;
 			}
+		},
+		checkUUID: function(uuid) {
+			return this.data.uuid === uuid;
+		},
+		getData: function() {
+			return this.data;
 		}
 	};
 
