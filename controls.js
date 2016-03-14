@@ -53,6 +53,7 @@ pc.script.create("controls", function(app) {
             this.timer += dt;
             this.handleMovement();
             this.jump(dt);
+            console.log(this.jumpFuel);
         },
         postUpdate: function(dt) {
             if (!this.player)
@@ -130,9 +131,11 @@ pc.script.create("controls", function(app) {
                 jumpForce.set(0, 1, 0).normalize().scale(this.power);
                 this.player.rigidbody.applyForce(jumpForce);
                 this.jumpFuel -= 35 * dt;
-            } else if (this.releasedJump && this.player.getPosition().y > 0) {
-                jumpForce.set(0, -1, 0).normalize().scale(this.power);
-                this.player.rigidbody.applyForce(jumpForce);
+            } else if (this.releasedJump) {
+                if (this.player.getPosition().y > 0) {
+                    jumpForce.set(0, -1, 0).normalize().scale(this.power);
+                    this.player.rigidbody.applyForce(jumpForce);
+                }
                 if (this.jumpFuel >= 100) {
                     this.jumpFuel = 100;
                 } else {
@@ -141,7 +144,7 @@ pc.script.create("controls", function(app) {
             }
         },
         attack: function() {
-            if (!this.player || parseInt(this.timer) <= this.timeStamp)
+            if (!this.player || parseInt(this.timer) < this.timeStamp)
                 return;
             this.timeStamp = parseInt(this.timer) + 3;
             this.player.rigidbody.linearVelocity = new pc.Vec3(0, 0, 0);
