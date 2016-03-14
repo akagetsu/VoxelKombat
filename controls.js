@@ -15,6 +15,8 @@ pc.script.create("controls", function(app) {
     var Controls = function(entity) {
         this.entity = entity; //this is the camera
 
+        this.jumpFuel = 100; //fuel for the jump
+
         this.releasedJump = true;
 
         this.pressedJump = false;
@@ -45,7 +47,7 @@ pc.script.create("controls", function(app) {
             if (!this.player)
                 return;
             this.handleMovement();
-            this.jump();
+            this.jump(dt);
         },
         postUpdate: function(dt) {
             if (!this.player)
@@ -116,15 +118,21 @@ pc.script.create("controls", function(app) {
                 this.player.rigidbody.applyForce(moveForce);
             }
         },
-        jump: function() {
+        jump: function(dt) {
             if (!this.player)
                 return;
-            if (this.pressedJump) {
+            if (this.pressedJump && this.jumpFuel >= 0) {
                 jumpForce.set(0, 1, 0).normalize().scale(this.power);
                 this.player.rigidbody.applyForce(jumpForce);
-            } else if (this.releasedJump && this.player.getPosition().y >= 0) {
+                this.jumpFuel -= 35*dt;
+            } else if (this.releasedJump && this.player.getPosition().y > 0) {
                 jumpForce.set(0, -1, 0).normalize().scale(this.power);
                 this.player.rigidbody.applyForce(jumpForce);
+                if(this.jumpFuel >= 100) {
+                    this.jumpFuel = 100;
+                } else {
+                    this.jumpFuel += 35*dt;
+                }
             }
         },
         attack: function() {
