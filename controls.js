@@ -53,7 +53,6 @@ pc.script.create("controls", function(app) {
             this.timer += dt;
             this.handleMovement();
             this.jump(dt);
-            console.log(this.jumpFuel);
         },
         postUpdate: function(dt) {
             if (!this.player)
