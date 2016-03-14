@@ -28,7 +28,7 @@ pc.script.create("gameMan", function(app) {
 			app.root.addChild(camera);
 
 			this.entity.script.ui.removeStart();
-			this.entity.script.ui.showHUD();
+			this.entity.script.ui.showHUD(camera.script.controls);
 
 			this.playerUpdate();
 		},
