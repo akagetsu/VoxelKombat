@@ -25,6 +25,10 @@ pc.script.create("controls", function(app) {
 
         this.player = null;
 
+        this.timer = 0; // in-game timer
+
+        this.timeStamp = 0; // used to add 3 second cooldown for projection
+
         // Disable browser default behaviour when we right click
         app.mouse.disableContextMenu();
 
@@ -46,6 +50,7 @@ pc.script.create("controls", function(app) {
         update: function(dt) {
             if (!this.player)
                 return;
+            this.timer += dt;
             this.handleMovement();
             this.jump(dt);
         },
@@ -124,20 +129,21 @@ pc.script.create("controls", function(app) {
             if (this.pressedJump && this.jumpFuel >= 0) {
                 jumpForce.set(0, 1, 0).normalize().scale(this.power);
                 this.player.rigidbody.applyForce(jumpForce);
-                this.jumpFuel -= 35*dt;
+                this.jumpFuel -= 35 * dt;
             } else if (this.releasedJump && this.player.getPosition().y > 0) {
                 jumpForce.set(0, -1, 0).normalize().scale(this.power);
                 this.player.rigidbody.applyForce(jumpForce);
-                if(this.jumpFuel >= 100) {
+                if (this.jumpFuel >= 100) {
                     this.jumpFuel = 100;
                 } else {
-                    this.jumpFuel += 35*dt;
+                    this.jumpFuel += 35 * dt;
                 }
             }
         },
         attack: function() {
-            if (!this.player)
+            if (!this.player || parseInt(this.timer) <= this.timeStamp)
                 return;
+            this.timeStamp = parseInt(this.timer) + 3;
             this.player.rigidbody.linearVelocity = new pc.Vec3(0, 0, 0);
             var forward = this.entity.forward;
             projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionMod);
