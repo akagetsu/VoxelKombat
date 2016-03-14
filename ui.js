@@ -18,6 +18,10 @@ pc.script.create('ui', function(app) {
         this.entity = entity;
         this.start = null;
         this.hud = null;
+        this.cameraControls = null;
+        this.project = null;
+        this.jumpFuel = null;
+        this.animate = false;
     };
 
     Ui.prototype = {
@@ -30,7 +34,12 @@ pc.script.create('ui', function(app) {
             }
         },
         // Called every frame, dt is time in seconds since last update
-        update: function(dt) {},
+        update: function(dt) {
+            if (!this.cameraControls || !this.project || !this.jumpFuel)
+                return;
+            this.handleProjection();
+            this.handleJump();
+        },
         showStart: function() {
             var asset = app.assets.get(this.start);
             if (asset) {
@@ -44,13 +53,31 @@ pc.script.create('ui', function(app) {
         removeStart: function() {
             this.start.remove();
         },
-        showHUD: function() {
-            var asset = app.assets.get(this.html);
+        showHUD: function(controls) {
+            var asset = app.assets.get(this.hud);
+            this.cameraControls = controls;
             if (asset) {
                 this.hud = document.createElement("div");
                 this.hud.id = "ui";
                 this.hud.innerHTML = asset.resource;
                 document.body.appendChild(this.hud);
+
+                this.project = this.hud.getElementsByClassName("projection")[0];
+                this.jumpFuel = this.hud.getElementsByClassName("jump-fuel");
+            }
+        },
+        handleProjection: function() {
+            if (parseInt(this.cameraControls.timer) >= this.cameraControls.timeStamp) {
+                this.project.className = 'projection';
+                this.animate = false;
+            } else if (parseInt(this.cameraControls.timer) < this.cameraControls.timeStamp && !this.animate) {
+                this.project.className = 'projection animate';
+                this.animate = true;
+            }
+        },
+        handleJump: function() {
+            for (var i = 0; i <= 1; i++) {
+                this.jumpFuel[i].style.height = parseInt(this.cameraControls.jumpFuel) + "%";
             }
         },
         removeHUD: function() {
