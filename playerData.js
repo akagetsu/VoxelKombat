@@ -7,6 +7,7 @@ pc.script.create('playerData', function(app) {
 		this.data.gameId = '';
 		this.data.pos = new pc.Vec3();
 		this.data.rot = new pc.Vec3();
+		this.lastPos = new pc.Vec3();
 	};
 
 	PlayerData.prototype = {
@@ -27,10 +28,10 @@ pc.script.create('playerData', function(app) {
 			if (!newData)
 				return;
 			this.data = newData;
-			var p = newData.pos;
-			var r = newData.rot;
-			this.entity.rigidbody.teleport(p);
-			this.entity.setLocalRotation(r);
+			var newPos = new pc.Vec3().lerp(new pc.Vec3().copy(newData.pos), this.lastPos, 0.5);
+			this.entity.rigidbody.teleport(newPos);
+			this.entity.setLocalRotation(new pc.Vec3().copy(newData.rot));
+			this.lastPos = newPos;
 		},
 		setColorMaterial: function(color) {
 			this.entity.model.materialAsset = app.assets.find(color[0].toUpperCase() + color.slice(1));
