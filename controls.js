@@ -126,11 +126,11 @@ pc.script.create("controls", function(app) {
         jump: function(dt) {
             if (!this.player)
                 return;
-            if (this.pressedJump && this.jumpFuel >= 0) {
+            if (this.pressedJump && this.jumpFuel >= 1) {
                 jumpForce.set(0, 1, 0).normalize().scale(this.power);
                 this.player.rigidbody.applyForce(jumpForce);
                 this.jumpFuel -= 35 * dt;
-            } else if (this.releasedJump) {
+            } else if (this.releasedJump || this.jumpFuel < 1) {
                 if (this.player.getPosition().y > 0) {
                     jumpForce.set(0, -1, 0).normalize().scale(this.power);
                     this.player.rigidbody.applyForce(jumpForce);
