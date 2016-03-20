@@ -7,6 +7,7 @@ pc.script.create('playerData', function(app) {
 		this.data.gameId = '';
 		this.data.pos = new pc.Vec3();
 		this.data.rot = new pc.Vec3();
+		this.data.dead = false;
 		this.lastPos = new pc.Vec3();
 	};
 
@@ -27,6 +28,17 @@ pc.script.create('playerData', function(app) {
 		setData: function(newData) {
 			if (!newData)
 				return;
+			if(newData.dead) {
+				if(!this.entity.enabled) {
+					return;
+				}
+				this.entity.enabled = false;
+				return;
+			} else {
+				if(!this.entity.enabled) {
+					this.entity.enabled = true;
+				}
+			}
 			this.data = newData;
 			if (newData.pos) {
 				var newPos = new pc.Vec3().lerp(new pc.Vec3().copy(newData.pos), this.lastPos, 0.5);
