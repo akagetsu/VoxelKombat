@@ -57,6 +57,18 @@ pc.script.create("gameMan", function(app) {
 					this.otherPlayers[uuid] = newPlayer;
 				} else if (alreadyHere && !this.player.script.playerData.checkUUID(uuid)) {
 					alreadyHere.script.playerData.setData(playerData);
+				} else if (uuid === this.player.script.playerData.data.uuid) {
+					if (playerData.dead) {
+						if (!this.player.enabled) {
+							return;
+						}
+						this.player.enabled = false;
+						return;
+					} else {
+						if (!this.player.enabled) {
+							this.player.enabled = true;
+						}
+					}
 				}
 			}
 		},
