@@ -53,6 +53,7 @@ pc.script.create("controls", function(app) {
             this.timer += dt;
             this.handleMovement();
             this.jump(dt);
+            this.checkFall();
         },
         postUpdate: function(dt) {
             if (!this.player)
@@ -150,6 +151,15 @@ pc.script.create("controls", function(app) {
             var forward = this.entity.forward;
             projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionMod);
             this.player.rigidbody.applyForce(projectionForce);
+        },
+        checkFall: function() {
+            if(this.player.getPosition().y <= -13) {
+                this.player.script.playerData.data.dead = true;
+            }
+            // move this somewhere else potentially!
+            setTimeout(function() {
+                this.player.script.playerData.data.dead = false;
+            }.bind(this), 3000);
         },
         onMouseDown: function(event) {
             if (!this.player)
