@@ -16,6 +16,7 @@ pc.script.create('playerData', function(app) {
 		update: function(dt) {
 			this.data.pos = this.entity.getPosition();
 			this.data.rot = this.entity.getLocalRotation();
+			this.checkDeath(this.data.dead);
 		},
 		setup: function(data) {
 			this.data.uuid = data.uuid;
@@ -28,25 +29,29 @@ pc.script.create('playerData', function(app) {
 		setData: function(newData) {
 			if (!newData)
 				return;
-			if(newData.dead) {
-				if(!this.entity.enabled) {
-					return;
-				}
-				this.entity.enabled = false;
+			if (!this.checkDeath(newData.dead))
 				return;
-			} else {
-				if(!this.entity.enabled) {
-					this.entity.enabled = true;
-				}
-			}
 			this.data = newData;
 			if (newData.pos) {
 				var newPos = new pc.Vec3().lerp(new pc.Vec3().copy(newData.pos), this.lastPos, 0.1);
 				this.entity.rigidbody.teleport(newPos);
 				this.lastPos = newPos;
 			}
-			if(newData.rot) {
+			if (newData.rot) {
 				this.entity.setLocalRotation(newData.rot);
+			}
+		},
+		checkDeath: function(dead) {
+			if (dead) {
+				if (this.entity.enabled) {
+					this.entity.enabled = false;
+				}
+				return false;
+			} else {
+				if (!this.entity.enabled) {
+					this.entity.enabled = true;
+				}
+				return true;
 			}
 		},
 		setColorMaterial: function(color) {
