@@ -41,7 +41,7 @@ pc.script.create('playerData', function(app) {
 			}
 			this.data = newData;
 			if (newData.pos) {
-				var newPos = new pc.Vec3().lerp(new pc.Vec3().copy(newData.pos), this.lastPos, 0.5);
+				var newPos = new pc.Vec3().lerp(new pc.Vec3().copy(newData.pos), this.lastPos, 0.1);
 				this.entity.rigidbody.teleport(newPos);
 				this.lastPos = newPos;
 			}
