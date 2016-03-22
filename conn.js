@@ -1,5 +1,6 @@
 // conn.js
 // This whole things needs some serious refactoring and modularity BRO
+pc.script.attribute('serverip', 'string', "http://localhost:3000");
 pc.script.create("conn", function(app) {
 	var Conn = function(entity) {
 		this.entity = entity;
@@ -10,7 +11,7 @@ pc.script.create("conn", function(app) {
 		update: function(dt) {},
 		playerConn: function() {
 			this.gameMan = this.entity.script.gameMan;
-			var socket = this.socket = io.connect("http://localhost:3000");
+			var socket = this.socket = io.connect(this.serverip);
 
 			if (localStorage) {
 				var playerData = JSON.parse(localStorage.getItem("playerData"));
@@ -45,6 +46,9 @@ pc.script.create("conn", function(app) {
 		},
 		sendPlayerData: function(data) {
 			this.socket.emit('player_update', data);
+		},
+		sendCollision: function(data) {
+			this.socket.emit('collision', data);
 		}
 	};
 
