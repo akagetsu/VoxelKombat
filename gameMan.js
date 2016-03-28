@@ -81,7 +81,7 @@ pc.script.create("gameMan", function(app) {
 		playerUpdate: function() {
 			var data = this.player.script.playerData.getData();
 			this.entity.script.conn.sendPlayerData(data);
-			setTimeout(this.playerUpdate.bind(this), 100);
+			setTimeout(this.playerUpdate.bind(this), 10);
 		}
 
 	};
