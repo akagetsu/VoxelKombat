@@ -3,7 +3,6 @@ pc.script.create("input", function(app) {
 
 	var Input = function(entity) {
 		this.entity = entity;
-		this.player = null;
 		this.controller = null;
 
 		app.keyboard.on(pc.EVENT_KEYDOWN, this.onKeyDown, this);
@@ -12,13 +11,13 @@ pc.script.create("input", function(app) {
 
 	Input.prototype = {
 		name: "Input",
-		initialize: function() {},
-		init: function(player) {
-			this.player = player;
+		initialize: function() {
 			this.controller = this.entity.script.controls;
 		},
 		update: function(dt) {},
 		onKeyDown: function(event) {
+			if(!this.controller)
+				return;
 			if(event.key === pc.KEY_W) {
 				this.controller.playerState.fow = true;
 			}
@@ -33,6 +32,8 @@ pc.script.create("input", function(app) {
 			}
 		},
 		onKeyUp: function(event) {
+			if(!this.controller)
+				return;
 			if(event.key === pc.KEY_W) {
 				this.controller.playerState.fow = false;
 			}
