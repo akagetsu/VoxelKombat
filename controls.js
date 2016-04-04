@@ -89,7 +89,8 @@ pc.script.create("controls", function(app) {
                 this.player.rigidbody.applyForce(moveForce);
             }
 
-            if (this.player.getPosition().y <= -13) {
+            if (this.player.getPosition().y <= -13 ||
+                this.player.getPosition().length() >= 400) {
                 this.player.script.playerData.data.dead = true;
             }
         },
