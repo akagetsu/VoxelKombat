@@ -3,7 +3,7 @@ pc.script.create("input", function(app) {
 
 	var Input = function(entity) {
 		this.entity = entity;
-		this.controller = null;
+		this.playerState = null;
 
         app.mouse.disableContextMenu();
         app.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
@@ -14,48 +14,48 @@ pc.script.create("input", function(app) {
 	Input.prototype = {
 		name: "Input",
 		initialize: function() {
-			this.controller = this.entity.script.controls;
+			this.playerState = this.entity.script.controls.playerState;
 		},
 		update: function(dt) {},
 		onKeyDown: function(event) {
-			if(!this.controller)
+			if(!this.playerState)
 				return;
 			if(event.key === pc.KEY_W) {
-				this.controller.playerState.fow = true;
+				this.playerState.fow = true;
 			}
 			if(event.key === pc.KEY_S) {
-				this.controller.playerState.bck = true;
+				this.playerState.bck = true;
 			}
 			if(event.key === pc.KEY_A) {
-				this.controller.playerState.lef = true;
+				this.playerState.lef = true;
 			}
 			if(event.key === pc.KEY_D) {
-				this.controller.playerState.rig = true;
+				this.playerState.rig = true;
 			}
 		},
 		onKeyUp: function(event) {
-			if(!this.controller)
+			if(!this.playerState)
 				return;
 			if(event.key === pc.KEY_W) {
-				this.controller.playerState.fow = false;
+				this.playerState.fow = false;
 			}
 			if(event.key === pc.KEY_S) {
-				this.controller.playerState.bck = false;
+				this.playerState.bck = false;
 			}
 			if(event.key === pc.KEY_A) {
-				this.controller.playerState.lef = false;
+				this.playerState.lef = false;
 			}
 			if(event.key === pc.KEY_D) {
-				this.controller.playerState.rig = false;
+				this.playerState.rig = false;
 			}
 		},
         onMouseMove: function(event) {
-        	if(!this.controller)
+        	if(!this.playerState)
 				return;
 
             if (pc.Mouse.isPointerLocked() || event.buttons[0]) {
-            	this.controller.playerState.vew.dx = event.dx;
-            	this.controller.playerState.vew.dy = event.dy;
+            	this.playerState.vew.dx = event.dx;
+            	this.playerState.vew.dy = event.dy;
             }
         },
 	};
