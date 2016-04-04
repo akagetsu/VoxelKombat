@@ -5,6 +5,8 @@ pc.script.create("input", function(app) {
 		this.entity = entity;
 		this.controller = null;
 
+        app.mouse.disableContextMenu();
+        app.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
 		app.keyboard.on(pc.EVENT_KEYDOWN, this.onKeyDown, this);
 		app.keyboard.on(pc.EVENT_KEYUP, this.onKeyUp, this);
 	};
@@ -46,7 +48,16 @@ pc.script.create("input", function(app) {
 			if(event.key === pc.KEY_D) {
 				this.controller.playerState.rig = false;
 			}
-		}
+		},
+        onMouseMove: function(event) {
+        	if(!this.controller)
+				return;
+
+            if (pc.Mouse.isPointerLocked() || event.buttons[0]) {
+            	this.controller.playerState.vew.dx = event.dx;
+            	this.controller.playerState.vew.dy = event.dy;
+            }
+        },
 	};
 
 	return Input;

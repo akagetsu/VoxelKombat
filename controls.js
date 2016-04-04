@@ -35,14 +35,12 @@ pc.script.create("controls", function(app) {
             "lef": false,
             "rig": false,
             "jmp": false,
-            "atk": false
+            "atk": false,
+            "vew": {
+                "dx": 0,
+                "dy": 0
+            }
         };
-
-        // Disable browser default behaviour when we right click
-        app.mouse.disableContextMenu();
-
-        // Listen for mousemovement and handle it accordingly
-        app.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
 
         // Listen for mouseclicks and handle them accordingly
         app.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
@@ -104,8 +102,20 @@ pc.script.create("controls", function(app) {
             this.handleCamera();
         },
         handleCamera: function() {
-            if (!this.player)
-                return;
+            this.eulers.x -= this.lookSpeed * this.playerState.vew.dx;
+            this.eulers.y -= this.lookSpeed * this.playerState.vew.dy;
+
+            // clip camera on top
+            if (this.eulers.y <= -75) {
+                this.eulers.y = -75;
+            } else if (this.eulers.y >= 45) {
+                this.eulers.y = 45;
+            }
+            // reset left-right to 0 once a full circle is complete
+            if (this.eulers.x >= 360 || this.eulers.x <= -360) {
+                this.eulers.x = 0;
+            }
+
             var cameraPosition = this.entity.getPosition();
             this.entity.setLocalEulerAngles(this.eulers.y, this.eulers.x, 0);
             this.entity.setPosition(this.player.getPosition());
@@ -114,25 +124,8 @@ pc.script.create("controls", function(app) {
             if (this.entity.getPosition().y <= 0) {
                 this.entity.setPosition(cameraPosition.x, 0, cameraPosition.z);
             }
-        },
-        onMouseMove: function(event) {
-            if (!this.player)
-                return;
-            if (pc.Mouse.isPointerLocked() || event.buttons[0]) {
-                this.eulers.x -= this.lookSpeed * event.dx;
-                this.eulers.y -= this.lookSpeed * event.dy;
-
-                // clip camera on top
-                if (this.eulers.y <= -75) {
-                    this.eulers.y = -75;
-                } else if (this.eulers.y >= 45) {
-                    this.eulers.y = 45;
-                }
-                // reset left-right to 0 once a full circle is complete
-                if (this.eulers.x >= 360 || this.eulers.x <= -360) {
-                    this.eulers.x = 0;
-                }
-            }
+            this.playerState.vew.dx = 0;
+            this.playerState.vew.dy = 0;
         },
         jump: function(dt) {
             if (!this.player)
@@ -163,7 +156,7 @@ pc.script.create("controls", function(app) {
             this.player.rigidbody.applyForce(projectionForce);
         },
         checkFall: function() {
-            if(this.player.getPosition().y <= -13) {
+            if (this.player.getPosition().y <= -13) {
                 this.player.script.playerData.data.dead = true;
             }
             // move this somewhere else potentially!
