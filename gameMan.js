@@ -19,8 +19,9 @@ pc.script.create("gameMan", function(app) {
 			var camera = app.root.findByName('PlayerCamera').clone();
 			this.player = app.root.findByName('Player').clone();
 
-			camera.script.controls.init(this.player);
+			this.player.script.controls.init(camera);
 			this.player.script.playerData.setup(userData);
+			camera.script.input.init(this.player);
 			camera.enabled = true;
 			this.player.enabled = true;
 
@@ -28,7 +29,7 @@ pc.script.create("gameMan", function(app) {
 			app.root.addChild(camera);
 
 			this.entity.script.ui.removeStart();
-			this.entity.script.ui.showHUD(camera.script.controls);
+			this.entity.script.ui.showHUD(this.player.script.controls);
 
 			this.playerUpdate();
 		},

@@ -6,6 +6,7 @@ pc.script.create("playerCollider", function(app) {
     PlayerCollider.prototype = {
         initialize: function() {
             this.entity.collision.on('collisionstart', this.onCollisionStart, this);
+            this.entity.collision.on('collisionend', this.onCollisionEnd, this);
         },
 
         onCollisionStart: function(result) {
@@ -18,6 +19,14 @@ pc.script.create("playerCollider", function(app) {
                 });
             }
 
+            if(result.other.name.includes('Box')) {
+                this.entity.script.controls.playerState.flr = true;
+            }
+        },
+        onCollisionEnd: function(result) {
+            if(result.name.includes('Box')) {
+                this.entity.script.controls.playerState.flr = false;
+            }
         }
     };
 
