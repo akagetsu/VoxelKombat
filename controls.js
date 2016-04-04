@@ -29,6 +29,15 @@ pc.script.create("controls", function(app) {
 
         this.timeStamp = 0; // used to add 3 second cooldown for projection
 
+        this.playerState = {
+            "fow": false,
+            "bck": false,
+            "lef": false,
+            "rig": false,
+            "jmp": false,
+            "atk": false
+        };
+
         // Disable browser default behaviour when we right click
         app.mouse.disableContextMenu();
 
@@ -51,9 +60,43 @@ pc.script.create("controls", function(app) {
             if (!this.player)
                 return;
             this.timer += dt;
-            this.handleMovement();
+            this.move(dt);
             this.jump(dt);
             this.checkFall();
+        },
+        move: function(dt) {
+            if (!this.player)
+                return;
+            var forward = this.entity.forward;
+            var right = this.entity.right;
+
+            var x = 0;
+            var z = 0;
+
+            if (this.playerState.lef) {
+                x -= right.x * dt;
+                z -= right.z * dt;
+            }
+
+            if (this.playerState.rig) {
+                x += right.x * dt;
+                z += right.z * dt;
+            }
+
+            if (this.playerState.fow) {
+                x += forward.x * dt;
+                z += forward.z * dt;
+            }
+
+            if (this.playerState.bck) {
+                x -= forward.x * dt;
+                z -= forward.z * dt;
+            }
+
+            if (x !== 0 && z !== 0) {
+                moveForce.set(x, 0, z).normalize().scale(this.power);
+                this.player.rigidbody.applyForce(moveForce);
+            }
         },
         postUpdate: function(dt) {
             if (!this.player)
@@ -89,39 +132,6 @@ pc.script.create("controls", function(app) {
                 if (this.eulers.x >= 360 || this.eulers.x <= -360) {
                     this.eulers.x = 0;
                 }
-            }
-        },
-        handleMovement: function() {
-            if (!this.player)
-                return;
-            var forward = this.entity.forward;
-            var right = this.entity.right;
-
-            var x = 0;
-            var z = 0;
-
-            if (app.keyboard.isPressed(pc.KEY_A)) {
-                x -= right.x;
-                z -= right.z;
-            }
-            if (app.keyboard.isPressed(pc.KEY_D)) {
-                x += right.x;
-                z += right.z;
-            }
-
-            if (app.keyboard.isPressed(pc.KEY_W)) {
-                x += forward.x;
-                z += forward.z;
-            }
-
-            if (app.keyboard.isPressed(pc.KEY_S)) {
-                x -= forward.x;
-                z -= forward.z;
-            }
-
-            if (x !== 0 && z !== 0) {
-                moveForce.set(x, 0, z).normalize().scale(this.power);
-                this.player.rigidbody.applyForce(moveForce);
             }
         },
         jump: function(dt) {
