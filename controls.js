@@ -41,11 +41,6 @@ pc.script.create("controls", function(app) {
                 "dy": 0
             }
         };
-
-        // Listen for mouseclicks and handle them accordingly
-        app.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
-
-        app.mouse.on(pc.EVENT_MOUSEUP, this.onMouseUp, this);
     };
 
     Controls.prototype = {
@@ -58,6 +53,7 @@ pc.script.create("controls", function(app) {
             this.timer += dt;
             this.move(dt);
             this.jump(dt);
+            this.attack();
         },
         move: function(dt) {
             if (!this.player)
@@ -128,11 +124,11 @@ pc.script.create("controls", function(app) {
         jump: function(dt) {
             if (!this.player)
                 return;
-            if (this.pressedJump && this.jumpFuel >= 1) {
+            if (this.playerState.jmp && this.jumpFuel >= 1) {
                 jumpForce.set(0, 1, 0).normalize().scale(this.power);
                 this.player.rigidbody.applyForce(jumpForce);
                 this.jumpFuel -= 35 * dt;
-            } else if (this.releasedJump || this.jumpFuel < 1) {
+            } else if (!this.playerState.jmp || this.jumpFuel < 1) {
                 if (this.player.getPosition().y > 0) {
                     jumpForce.set(0, -1, 0).normalize().scale(this.power);
                     this.player.rigidbody.applyForce(jumpForce);
@@ -145,40 +141,14 @@ pc.script.create("controls", function(app) {
             }
         },
         attack: function() {
-            if (!this.player || parseInt(this.timer) < this.timeStamp)
+            if (!this.player || parseInt(this.timer) < this.timeStamp || !this.playerState.atk)
                 return;
             this.timeStamp = parseInt(this.timer) + 3;
             this.player.rigidbody.linearVelocity = new pc.Vec3(0, 0, 0);
             var forward = this.entity.forward;
             projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionMod);
             this.player.rigidbody.applyForce(projectionForce);
-        },
-        onMouseDown: function(event) {
-            if (!this.player)
-                return;
-            if (this.player.enabled) {
-                app.mouse.enablePointerLock();
-            }
-            if (!pc.Mouse.isPointerLocked()) {
-                return;
-            }
-
-            if (event.button === pc.MOUSEBUTTON_RIGHT) {
-                this.pressedJump = true;
-                this.releasedJump = false;
-            }
-
-            if (event.button === pc.MOUSEBUTTON_LEFT) {
-                this.attack();
-            }
-        },
-        onMouseUp: function(event) {
-            if (!this.player)
-                return;
-            if (event.button === pc.MOUSEBUTTON_RIGHT) {
-                this.pressedJump = false;
-                this.releasedJump = true;
-            }
+            this.playerState.atk = false;
         }
     };
 

@@ -5,8 +5,10 @@ pc.script.create("input", function(app) {
 		this.entity = entity;
 		this.playerState = null;
 
-        app.mouse.disableContextMenu();
-        app.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
+		app.mouse.disableContextMenu();
+		app.mouse.on(pc.EVENT_MOUSEMOVE, this.onMouseMove, this);
+		app.mouse.on(pc.EVENT_MOUSEDOWN, this.onMouseDown, this);
+		app.mouse.on(pc.EVENT_MOUSEUP, this.onMouseUp, this);
 		app.keyboard.on(pc.EVENT_KEYDOWN, this.onKeyDown, this);
 		app.keyboard.on(pc.EVENT_KEYUP, this.onKeyUp, this);
 	};
@@ -18,46 +20,76 @@ pc.script.create("input", function(app) {
 		},
 		update: function(dt) {},
 		onKeyDown: function(event) {
-			if(!this.playerState)
+			if (!this.playerState)
 				return;
-			if(event.key === pc.KEY_W) {
+			if (event.key === pc.KEY_W) {
 				this.playerState.fow = true;
 			}
-			if(event.key === pc.KEY_S) {
+			if (event.key === pc.KEY_S) {
 				this.playerState.bck = true;
 			}
-			if(event.key === pc.KEY_A) {
+			if (event.key === pc.KEY_A) {
 				this.playerState.lef = true;
 			}
-			if(event.key === pc.KEY_D) {
+			if (event.key === pc.KEY_D) {
 				this.playerState.rig = true;
 			}
 		},
 		onKeyUp: function(event) {
-			if(!this.playerState)
+			if (!this.playerState)
 				return;
-			if(event.key === pc.KEY_W) {
+			if (event.key === pc.KEY_W) {
 				this.playerState.fow = false;
 			}
-			if(event.key === pc.KEY_S) {
+			if (event.key === pc.KEY_S) {
 				this.playerState.bck = false;
 			}
-			if(event.key === pc.KEY_A) {
+			if (event.key === pc.KEY_A) {
 				this.playerState.lef = false;
 			}
-			if(event.key === pc.KEY_D) {
+			if (event.key === pc.KEY_D) {
 				this.playerState.rig = false;
 			}
 		},
-        onMouseMove: function(event) {
-        	if(!this.playerState)
+		onMouseMove: function(event) {
+			if (!this.playerState)
 				return;
 
-            if (pc.Mouse.isPointerLocked() || event.buttons[0]) {
-            	this.playerState.vew.dx = event.dx;
-            	this.playerState.vew.dy = event.dy;
-            }
-        },
+			if (pc.Mouse.isPointerLocked() || event.buttons[0]) {
+				this.playerState.vew.dx = event.dx;
+				this.playerState.vew.dy = event.dy;
+			}
+		},
+		onMouseDown: function(event) {
+			if (this.entity.script.controls.player &&
+				this.entity.script.controls.player.enabled) {
+				app.mouse.enablePointerLock();
+			}
+
+			if (!this.playerState || !pc.Mouse.isPointerLocked())
+				return;
+
+
+			if (event.button === pc.MOUSEBUTTON_RIGHT) {
+				this.playerState.jmp = true;
+			}
+
+			if (event.button === pc.MOUSEBUTTON_LEFT) {
+				this.playerState.atk = true;
+			}
+		},
+		onMouseUp: function(event) {
+			if (!this.playerState)
+				return;
+
+			if (event.button === pc.MOUSEBUTTON_RIGHT) {
+				this.playerState.jmp = false;
+			}
+
+			if (event.button === pc.MOUSEBUTTON_LEFT) {
+				this.playerState.atk = false;
+			}
+		}
 	};
 
 	return Input;
