@@ -58,7 +58,6 @@ pc.script.create("controls", function(app) {
             this.timer += dt;
             this.move(dt);
             this.jump(dt);
-            this.checkFall();
         },
         move: function(dt) {
             if (!this.player)
@@ -92,6 +91,10 @@ pc.script.create("controls", function(app) {
             if (x !== 0 && z !== 0) {
                 moveForce.set(x, 0, z).normalize().scale(this.power);
                 this.player.rigidbody.applyForce(moveForce);
+            }
+
+            if (this.player.getPosition().y <= -13) {
+                this.player.script.playerData.data.dead = true;
             }
         },
         postUpdate: function(dt) {
@@ -149,15 +152,6 @@ pc.script.create("controls", function(app) {
             var forward = this.entity.forward;
             projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionMod);
             this.player.rigidbody.applyForce(projectionForce);
-        },
-        checkFall: function() {
-            if (this.player.getPosition().y <= -13) {
-                this.player.script.playerData.data.dead = true;
-            }
-            // move this somewhere else potentially!
-            setTimeout(function() {
-                this.player.script.playerData.data.dead = false;
-            }.bind(this), 3000);
         },
         onMouseDown: function(event) {
             if (!this.player)
