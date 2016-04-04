@@ -129,8 +129,9 @@ pc.script.create("controls", function(app) {
                 this.entity.rigidbody.applyForce(jumpForce);
                 this.jumpFuel -= 35 * dt;
             } else if (!this.playerState.jmp || this.jumpFuel < 1) {
-                if (this.entity.getPosition().y > 0) {
-                    jumpForce.set(0, -1, 0).normalize().scale(this.power);
+                if (this.entity.getPosition().y > 0.5 &&
+                    !this.playerState.flr) {
+                    jumpForce.set(0, -0.5, 0).normalize().scale(this.power);
                     this.entity.rigidbody.applyForce(jumpForce);
                 }
                 if (this.jumpFuel >= 100) {
