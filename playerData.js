@@ -7,6 +7,29 @@ pc.script.create('playerData', function(app) {
 		this.data.gameId = '';
 		this.data.pos = new pc.Vec3();
 		this.data.rot = new pc.Vec3();
+		this.data.state = {
+			"fow": false,
+			"bck": false,
+			"lef": false,
+			"rig": false,
+			"jmp": false,
+			"atk": false,
+			"vew": {
+				"dx": 0,
+				"dy": 0
+			},
+			"cam": {
+				"fow": {
+					"x": 0,
+					"z": 0
+				},
+				"rig": {
+					"x": 0,
+					"z": 0
+				}
+			},
+			"flr": false
+		};
 		this.data.dead = false;
 		this.lastPos = new pc.Vec3();
 	};

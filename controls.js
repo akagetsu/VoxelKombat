@@ -17,10 +17,6 @@ pc.script.create("controls", function(app) {
 
         this.jumpFuel = 100; //fuel for the jump
 
-        this.releasedJump = true;
-
-        this.pressedJump = false;
-
         this.eulers = new pc.Vec3();
 
         this.camera = null;
@@ -29,24 +25,14 @@ pc.script.create("controls", function(app) {
 
         this.timeStamp = 0; // used to add 3 second cooldown for projection
 
-        this.playerState = {
-            "fow": false,
-            "bck": false,
-            "lef": false,
-            "rig": false,
-            "jmp": false,
-            "atk": false,
-            "vew": {
-                "dx": 0,
-                "dy": 0
-            },
-            "flr": false
-        };
+        this.playerState = null;
     };
 
     Controls.prototype = {
         name: "Controls",
-        initialize: function() {},
+        initialize: function() {
+            this.playerState = this.entity.script.playerData.data.state;
+        },
         init: function(camera) {
             this.camera = camera;
         },

@@ -19,7 +19,7 @@ pc.script.create("input", function(app) {
 		initialize: function() {},
 		init: function(player) {
 			this.player = player;
-			this.playerState = this.player.script.controls.playerState;
+			this.playerState = this.player.script.playerData.data.state;
 		},
 		update: function(dt) {},
 		onKeyDown: function(event) {
