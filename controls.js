@@ -13,7 +13,7 @@ pc.script.create("controls", function(app) {
     var projectionForce = new pc.Vec3();
 
     var Controls = function(entity) {
-        this.entity = entity; //this is the camera
+        this.entity = entity; //this is the player
 
         this.jumpFuel = 100; //fuel for the jump
 
@@ -23,7 +23,7 @@ pc.script.create("controls", function(app) {
 
         this.eulers = new pc.Vec3();
 
-        this.player = null;
+        this.camera = null;
 
         this.timer = 0; // in-game timer
 
@@ -39,15 +39,16 @@ pc.script.create("controls", function(app) {
             "vew": {
                 "dx": 0,
                 "dy": 0
-            }
+            },
+            "flr": false
         };
     };
 
     Controls.prototype = {
         name: "Controls",
         initialize: function() {},
-        init: function(player) {
-            this.player = player;
+        init: function(camera) {
+            this.camera = camera;
         },
         update: function(dt) {
             this.timer += dt;
@@ -56,10 +57,10 @@ pc.script.create("controls", function(app) {
             this.attack();
         },
         move: function(dt) {
-            if (!this.player)
+            if (!this.camera)
                 return;
-            var forward = this.entity.forward;
-            var right = this.entity.right;
+            var forward = this.camera.forward;
+            var right = this.camera.right;
 
             var x = 0;
             var z = 0;
@@ -86,16 +87,16 @@ pc.script.create("controls", function(app) {
 
             if (x !== 0 && z !== 0) {
                 moveForce.set(x, 0, z).normalize().scale(this.power);
-                this.player.rigidbody.applyForce(moveForce);
+                this.entity.rigidbody.applyForce(moveForce);
             }
 
-            if (this.player.getPosition().y <= -13 ||
-                this.player.getPosition().length() >= 400) {
-                this.player.script.playerData.data.dead = true;
+            if (this.entity.getPosition().y <= -13 ||
+                this.entity.getPosition().length() >= 400) {
+                this.entity.script.playerData.data.dead = true;
             }
         },
         postUpdate: function(dt) {
-            if (!this.player)
+            if (!this.camera)
                 return;
             this.eulers.x -= this.lookSpeed * this.playerState.vew.dx;
             this.eulers.y -= this.lookSpeed * this.playerState.vew.dy;
@@ -111,28 +112,26 @@ pc.script.create("controls", function(app) {
                 this.eulers.x = 0;
             }
 
-            var cameraPosition = this.entity.getPosition();
-            this.entity.setLocalEulerAngles(this.eulers.y, this.eulers.x, 0);
-            this.entity.setPosition(this.player.getPosition());
-            this.entity.rotateLocal(-15, 0, 0);
-            this.entity.translateLocal(0, 2, 5);
-            if (this.entity.getPosition().y <= 0) {
-                this.entity.setPosition(cameraPosition.x, 0, cameraPosition.z);
+            var cameraPosition = this.camera.getPosition();
+            this.camera.setLocalEulerAngles(this.eulers.y, this.eulers.x, 0);
+            this.camera.setPosition(this.entity.getPosition());
+            this.camera.rotateLocal(-15, 0, 0);
+            this.camera.translateLocal(0, 2, 5);
+            if (this.camera.getPosition().y <= 0) {
+                this.camera.setPosition(cameraPosition.x, 0, cameraPosition.z);
             }
             this.playerState.vew.dx = 0;
             this.playerState.vew.dy = 0;
         },
         jump: function(dt) {
-            if (!this.player)
-                return;
             if (this.playerState.jmp && this.jumpFuel >= 1) {
                 jumpForce.set(0, 1, 0).normalize().scale(this.power);
-                this.player.rigidbody.applyForce(jumpForce);
+                this.entity.rigidbody.applyForce(jumpForce);
                 this.jumpFuel -= 35 * dt;
             } else if (!this.playerState.jmp || this.jumpFuel < 1) {
-                if (this.player.getPosition().y > 0) {
+                if (this.entity.getPosition().y > 0) {
                     jumpForce.set(0, -1, 0).normalize().scale(this.power);
-                    this.player.rigidbody.applyForce(jumpForce);
+                    this.entity.rigidbody.applyForce(jumpForce);
                 }
                 if (this.jumpFuel >= 100) {
                     this.jumpFuel = 100;
@@ -142,13 +141,13 @@ pc.script.create("controls", function(app) {
             }
         },
         attack: function() {
-            if (!this.player || parseInt(this.timer) < this.timeStamp || !this.playerState.atk)
+            if (parseInt(this.timer) < this.timeStamp || !this.playerState.atk)
                 return;
             this.timeStamp = parseInt(this.timer) + 3;
-            this.player.rigidbody.linearVelocity = new pc.Vec3(0, 0, 0);
-            var forward = this.entity.forward;
+            this.entity.rigidbody.linearVelocity = new pc.Vec3(0, 0, 0);
+            var forward = this.camera.forward;
             projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionMod);
-            this.player.rigidbody.applyForce(projectionForce);
+            this.entity.rigidbody.applyForce(projectionForce);
             this.playerState.atk = false;
         }
     };

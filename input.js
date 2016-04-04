@@ -3,6 +3,7 @@ pc.script.create("input", function(app) {
 
 	var Input = function(entity) {
 		this.entity = entity;
+		this.player = null;
 		this.playerState = null;
 
 		app.mouse.disableContextMenu();
@@ -15,8 +16,10 @@ pc.script.create("input", function(app) {
 
 	Input.prototype = {
 		name: "Input",
-		initialize: function() {
-			this.playerState = this.entity.script.controls.playerState;
+		initialize: function() {},
+		init: function(player) {
+			this.player = player;
+			this.playerState = this.player.script.controls.playerState;
 		},
 		update: function(dt) {},
 		onKeyDown: function(event) {
@@ -61,8 +64,9 @@ pc.script.create("input", function(app) {
 			}
 		},
 		onMouseDown: function(event) {
-			if (this.entity.script.controls.player &&
-				this.entity.script.controls.player.enabled) {
+			if (this.player &&
+				this.player.script.controls.player &&
+				this.player.script.controls.player.enabled) {
 				app.mouse.enablePointerLock();
 			}
 

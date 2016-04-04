@@ -18,7 +18,7 @@ pc.script.create('ui', function(app) {
         this.entity = entity;
         this.start = null;
         this.hud = null;
-        this.cameraControls = null;
+        this.playerControls = null;
         this.project = null;
         this.jumpFuel = null;
         this.animate = false;
@@ -35,7 +35,7 @@ pc.script.create('ui', function(app) {
         },
         // Called every frame, dt is time in seconds since last update
         update: function(dt) {
-            if (!this.cameraControls || !this.project || !this.jumpFuel)
+            if (!this.playerControls || !this.project || !this.jumpFuel)
                 return;
             this.handleProjection();
             this.handleJump();
@@ -55,7 +55,7 @@ pc.script.create('ui', function(app) {
         },
         showHUD: function(controls) {
             var asset = app.assets.get(this.hud);
-            this.cameraControls = controls;
+            this.playerControls = controls;
             if (asset) {
                 this.hud = document.createElement("div");
                 this.hud.id = "ui";
@@ -67,17 +67,17 @@ pc.script.create('ui', function(app) {
             }
         },
         handleProjection: function() {
-            if (parseInt(this.cameraControls.timer) >= this.cameraControls.timeStamp) {
+            if (parseInt(this.playerControls.timer) >= this.playerControls.timeStamp) {
                 this.project.className = 'projection';
                 this.animate = false;
-            } else if (parseInt(this.cameraControls.timer) < this.cameraControls.timeStamp && !this.animate) {
+            } else if (parseInt(this.playerControls.timer) < this.playerControls.timeStamp && !this.animate) {
                 this.project.className = 'projection animate';
                 this.animate = true;
             }
         },
         handleJump: function() {
             for (var i = 0; i <= 1; i++) {
-                this.jumpFuel[i].style.height = parseInt(this.cameraControls.jumpFuel) + "%";
+                this.jumpFuel[i].style.height = parseInt(this.playerControls.jumpFuel) + "%";
             }
         },
         removeHUD: function() {
