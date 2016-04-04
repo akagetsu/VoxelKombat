@@ -55,8 +55,6 @@ pc.script.create("controls", function(app) {
             this.player = player;
         },
         update: function(dt) {
-            if (!this.player)
-                return;
             this.timer += dt;
             this.move(dt);
             this.jump(dt);
@@ -99,9 +97,6 @@ pc.script.create("controls", function(app) {
         postUpdate: function(dt) {
             if (!this.player)
                 return;
-            this.handleCamera();
-        },
-        handleCamera: function() {
             this.eulers.x -= this.lookSpeed * this.playerState.vew.dx;
             this.eulers.y -= this.lookSpeed * this.playerState.vew.dy;
 
