@@ -1,9 +1,9 @@
 // controls.js
 pc.script.attribute("lookSpeed", "number", 0.9);
 
-pc.script.attribute("power", "number", 10000);
+pc.script.attribute("power", "number", 500);
 
-pc.script.attribute("projectionMod", "number", 200);
+pc.script.attribute("projectionMod", "number", 50);
 
 pc.script.create("controls", function(app) {
     var moveForce = new pc.Vec3();

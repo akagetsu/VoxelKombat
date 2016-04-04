@@ -65,8 +65,7 @@ pc.script.create("input", function(app) {
 		},
 		onMouseDown: function(event) {
 			if (this.player &&
-				this.player.script.controls.player &&
-				this.player.script.controls.player.enabled) {
+				this.player.enabled) {
 				app.mouse.enablePointerLock();
 			}
 

@@ -21,6 +21,7 @@ pc.script.create("gameMan", function(app) {
 
 			this.player.script.controls.init(camera);
 			this.player.script.playerData.setup(userData);
+			camera.script.input.init(this.player);
 			camera.enabled = true;
 			this.player.enabled = true;
 
