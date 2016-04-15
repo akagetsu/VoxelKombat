@@ -12,10 +12,6 @@ pc.script.create('playerData', function(app) {
 			"rig": false,
 			"jmp": false,
 			"atk": false,
-			"vew": {
-				"dx": 0,
-				"dy": 0
-			},
 			"cam": {
 				"fow": {
 					"x": 0,
@@ -31,6 +27,10 @@ pc.script.create('playerData', function(app) {
 		};
 		this.data.dead = false;
 		this.data.pos = new pc.Vec3();
+		this.vew = {
+			"dx": 0,
+			"dy": 0
+		};
 	};
 
 	PlayerData.prototype = {
