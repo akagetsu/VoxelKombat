@@ -19,6 +19,7 @@ pc.script.create('playerData', function(app) {
 			"cam": {
 				"fow": {
 					"x": 0,
+					"y": 0,
 					"z": 0
 				},
 				"rig": {
@@ -98,6 +99,9 @@ pc.script.create('playerData', function(app) {
 		},
 		getData: function() {
 			return this.data;
+		},
+		getState: function() {
+			return this.data.state;
 		},
 		updatePos: function() {
 			this.entity.rigidbody.teleport(this.data.pos);
