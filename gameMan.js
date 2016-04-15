@@ -82,6 +82,17 @@ pc.script.create("gameMan", function(app) {
 			var data = this.player.script.playerData.getData();
 			this.entity.script.conn.sendPlayerData(data);
 			setTimeout(this.playerUpdate.bind(this), 1000);
+		},
+		stateDealer: function(data) {
+			if (!this.player || !data)
+				return;
+			var opponent = this.otherPlayers[data.uuid];
+
+			if (opponent && !this.player.script.playerData.checkUUID(data.uuid) && data.args.length) {
+				for (var i = 0; i < data.args.length; i++) {
+					opponent.script.playerData.setState(data.args[i]);
+				}
+			}
 		}
 	};
 

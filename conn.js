@@ -32,6 +32,10 @@ pc.script.create("conn", function(app) {
 				this.gameMan.opponentUpdate(data);
 			}.bind(this));
 
+			socket.on('player_state', function(data) {
+				this.gameMan.stateDealer(data);
+			}.bind(this));
+
 			// Remove opponent upon disconnect
 			socket.on('remove_user', function(data) {
 				this.gameMan.opponentRemove(data);
@@ -49,6 +53,9 @@ pc.script.create("conn", function(app) {
 		},
 		sendCollision: function(data) {
 			this.socket.emit('collision', data);
+		},
+		sendState: function(data) {
+			this.socket.emit('player_state', data);
 		}
 	};
 

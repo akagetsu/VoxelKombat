@@ -58,6 +58,8 @@ pc.script.create('playerData', function(app) {
 			this.data.pos = newData.pos;
 			this.entity.rigidbody.teleport(this.data.pos);
 		},
+		setState: function(args) {
+			this.data.state[args.state] = args.val;
 		},
 		checkDeath: function(dead) {
 			if (dead) {
