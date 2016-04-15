@@ -38,6 +38,7 @@ pc.script.create("controls", function(app) {
         },
         update: function(dt) {
             this.timer += dt;
+            this.playerState = this.entity.script.playerData.data.state;
             this.move(dt);
             this.jump(dt);
             this.attack();
