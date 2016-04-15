@@ -5,8 +5,6 @@ pc.script.create('playerData', function(app) {
 		this.data.uuid = '';
 		this.data.color = '';
 		this.data.gameId = '';
-		this.data.pos = new pc.Vec3();
-		this.data.rot = new pc.Vec3();
 		this.data.state = {
 			"fow": false,
 			"bck": false,
@@ -31,14 +29,15 @@ pc.script.create('playerData', function(app) {
 			"flr": false
 		};
 		this.data.dead = false;
-		this.lastPos = new pc.Vec3();
+		this.data.pos = new pc.Vec3();
 	};
 
 	PlayerData.prototype = {
 		initialize: function() {},
 		update: function(dt) {
-			this.data.pos = this.entity.getPosition();
-			this.data.rot = this.entity.getLocalRotation();
+			if (this.entity.getName() === "Player")
+				this.data.pos = this.entity.getPosition();
+
 			this.checkDeath(this.data.dead);
 		},
 		setup: function(data) {
@@ -46,6 +45,7 @@ pc.script.create('playerData', function(app) {
 			this.data.socketid = data.socketid;
 			this.data.color = data.color;
 			this.data.gameId = data.gameId;
+			this.data.state = data.state;
 			this.setColorMaterial(data.color);
 			this.setColorPosition(data.color);
 		},
@@ -55,14 +55,6 @@ pc.script.create('playerData', function(app) {
 			if (!this.checkDeath(newData.dead))
 				return;
 			this.data = newData;
-			if (newData.pos) {
-				var newPos = new pc.Vec3().lerp(new pc.Vec3().copy(newData.pos), this.lastPos, 0.1);
-				this.entity.rigidbody.teleport(newPos);
-				this.lastPos = newPos;
-			}
-			if (newData.rot) {
-				this.entity.setLocalRotation(newData.rot);
-			}
 		},
 		checkDeath: function(dead) {
 			if (dead) {
@@ -85,24 +77,31 @@ pc.script.create('playerData', function(app) {
 				color = this.data.color;
 			switch (color) {
 				case "red":
-					this.entity.setPosition(new pc.Vec3(-118, 0, 100));
+					this.data.pos = new pc.Vec3(-118, 0, 100);
 					break;
 				case "blue":
-					this.entity.setPosition(new pc.Vec3(-118, 0, -100));
+					this.data.pos = new pc.Vec3(-118, 0, -100);
 					break;
 				case "green":
-					this.entity.setPosition(new pc.Vec3(118, 0, -100));
+					this.data.pos = new pc.Vec3(118, 0, -100);
 					break;
 				default:
-					this.entity.setPosition(new pc.Vec3(118, 0, 100));
+					this.data.pos = new pc.Vec3(118, 0, 100);
 					break;
 			}
+			this.entity.setPosition(this.data.pos);
+			if (this.entity.getName() != "Player")
+				this.updatePos();
 		},
 		checkUUID: function(uuid) {
 			return this.data.uuid === uuid;
 		},
 		getData: function() {
 			return this.data;
+		},
+		updatePos: function() {
+			this.entity.rigidbody.teleport(this.data.pos);
+			setTimeout(this.updatePos.bind(this), 5000);
 		}
 	};
 
