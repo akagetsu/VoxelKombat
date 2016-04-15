@@ -44,10 +44,10 @@ pc.script.create("controls", function(app) {
             this.attack();
         },
         move: function(dt) {
-            if (!this.camera)
+            if (!this.camera && this.entity.getName() === "Player")
                 return;
-            var forward = this.camera.forward;
-            var right = this.camera.right;
+            var forward = this.playerState.cam.fow;
+            var right = this.playerState.cam.rig;
 
             var x = 0;
             var z = 0;
@@ -132,8 +132,7 @@ pc.script.create("controls", function(app) {
             if (parseInt(this.timer) < this.timeStamp || !this.playerState.atk)
                 return;
             this.timeStamp = parseInt(this.timer) + 3;
-            this.entity.rigidbody.linearVelocity = new pc.Vec3(0, 0, 0);
-            var forward = this.camera.forward;
+            var forward = this.playerState.cam.fow;
             projectionForce.set(forward.x, forward.y, forward.z).normalize().scale(this.power * this.projectionMod);
             this.entity.rigidbody.applyForce(projectionForce);
             this.playerState.atk = false;
