@@ -1,10 +1,13 @@
 pc.script.create('playerData', function(app) {
 	var PlayerData = function(entity) {
 		this.entity = entity;
+
 		this.data = {};
 		this.data.uuid = '';
 		this.data.color = '';
 		this.data.gameId = '';
+		this.data.dead = false;
+		this.data.pos = new pc.Vec3();
 		this.data.state = {
 			"fow": false,
 			"bck": false,
@@ -25,8 +28,7 @@ pc.script.create('playerData', function(app) {
 			},
 			"flr": false
 		};
-		this.data.dead = false;
-		this.data.pos = new pc.Vec3();
+
 		this.vew = {
 			"dx": 0,
 			"dy": 0
@@ -53,9 +55,9 @@ pc.script.create('playerData', function(app) {
 		setData: function(newData) {
 			if (!newData)
 				return;
-			if (!this.checkDeath(newData.dead))
-				return;
-			this.data = newData;
+			this.data.pos = newData.pos;
+			this.entity.rigidbody.teleport(this.data.pos);
+		},
 		},
 		checkDeath: function(dead) {
 			if (dead) {
@@ -91,8 +93,6 @@ pc.script.create('playerData', function(app) {
 					break;
 			}
 			this.entity.setPosition(this.data.pos);
-			if (this.entity.getName() != "Player")
-				this.updatePos();
 		},
 		checkUUID: function(uuid) {
 			return this.data.uuid === uuid;
@@ -102,10 +102,6 @@ pc.script.create('playerData', function(app) {
 		},
 		getState: function() {
 			return this.data.state;
-		},
-		updatePos: function() {
-			this.entity.rigidbody.teleport(this.data.pos);
-			setTimeout(this.updatePos.bind(this), 5000);
 		}
 	};
 
