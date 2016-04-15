@@ -21,7 +21,14 @@ pc.script.create("input", function(app) {
 			this.player = player;
 			this.playerState = this.player.script.playerData.data.state;
 		},
-		update: function(dt) {},
+		update: function(dt) {
+			this.playerState.cam.fow.x = this.entity.forward.x;
+			this.playerState.cam.fow.y = this.entity.forward.y;
+			this.playerState.cam.fow.z = this.entity.forward.z;
+
+			this.playerState.cam.rig.x = this.entity.right.x;
+			this.playerState.cam.rig.z = this.entity.right.z;
+		},
 		onKeyDown: function(event) {
 			if (!this.playerState)
 				return;
