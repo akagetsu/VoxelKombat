@@ -83,10 +83,10 @@ pc.script.create("controls", function(app) {
             }
         },
         postUpdate: function(dt) {
-            if (!this.camera)
+            if (!this.camera || this.entity.getName() != "Player")
                 return;
-            this.eulers.x -= this.lookSpeed * this.playerState.vew.dx;
-            this.eulers.y -= this.lookSpeed * this.playerState.vew.dy;
+            this.eulers.x -= this.lookSpeed * this.entity.script.playerData.vew.dx;
+            this.eulers.y -= this.lookSpeed * this.entity.script.playerData.vew.dy;
 
             // clip camera on top
             if (this.eulers.y <= -75) {
@@ -107,8 +107,8 @@ pc.script.create("controls", function(app) {
             if (this.camera.getPosition().y <= 0) {
                 this.camera.setPosition(cameraPosition.x, 0, cameraPosition.z);
             }
-            this.playerState.vew.dx = 0;
-            this.playerState.vew.dy = 0;
+            this.entity.script.playerData.vew.dx = 0;
+            this.entity.script.playerData.vew.dy = 0;
         },
         jump: function(dt) {
             if (this.playerState.jmp && this.jumpFuel >= 1) {

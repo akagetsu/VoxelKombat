@@ -66,8 +66,8 @@ pc.script.create("input", function(app) {
 				return;
 
 			if (pc.Mouse.isPointerLocked() || event.buttons[0]) {
-				this.playerState.vew.dx = event.dx;
-				this.playerState.vew.dy = event.dy;
+				this.player.script.playerData.vew.dx = event.dx;
+				this.player.script.playerData.vew.dy = event.dy;
 			}
 		},
 		onMouseDown: function(event) {
