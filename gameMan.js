@@ -48,8 +48,7 @@ pc.script.create("gameMan", function(app) {
 					try {
 						newPlayer = app.root.findByName('Player').clone();
 						newPlayer.enabled = true;
-						newPlayer.rigidbody.linearFactor = new pc.Vec3(0, 0, 0);
-						newPlayer.name = 'Other Player';
+						newPlayer.setName('Other Player');
 						newPlayer.script.playerData.setup(playerData);
 					} catch (e) {
 						console.error(e);
@@ -84,7 +83,6 @@ pc.script.create("gameMan", function(app) {
 			this.entity.script.conn.sendPlayerData(data);
 			setTimeout(this.playerUpdate.bind(this), 100);
 		}
-
 	};
 
 	return GameMan;
