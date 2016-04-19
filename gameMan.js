@@ -55,20 +55,12 @@ pc.script.create("gameMan", function(app) {
 					}
 					app.root.addChild(newPlayer);
 					this.otherPlayers[uuid] = newPlayer;
+					this.otherPlayers[uuid].script.playerData.updatePos(playerData.pos);
 				} else if (alreadyHere && !this.player.script.playerData.checkUUID(uuid)) {
 					alreadyHere.script.playerData.setData(playerData);
-				} else if (uuid === this.player.script.playerData.data.uuid) {
-					if (playerData.dead) {
-						if (!this.player.enabled) {
-							return;
-						}
-						this.player.enabled = false;
-						return;
-					} else {
-						if (!this.player.enabled) {
-							this.player.enabled = true;
-						}
-					}
+					alreadyHere.script.playerData.updatePos(playerData.pos);
+				} else if (this.player.script.playerData.checkUUID(uuid)) {
+					this.player.script.playerData.setData(playerData);
 				}
 			}
 		},
