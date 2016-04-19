@@ -8,6 +8,8 @@ pc.script.create('playerData', function(app) {
 		this.data.gameId = '';
 		this.data.dead = false;
 		this.data.pos = new pc.Vec3();
+		this.data.kills = 0;
+		this.data.deaths = 0;
 		this.data.state = {
 			"fow": false,
 			"bck": false,
@@ -40,8 +42,6 @@ pc.script.create('playerData', function(app) {
 		update: function(dt) {
 			if (this.entity.getName() === "Player")
 				this.data.pos = this.entity.getPosition();
-
-			this.checkDeath(this.data.dead);
 		},
 		setup: function(data) {
 			this.data.uuid = data.uuid;
@@ -55,7 +55,15 @@ pc.script.create('playerData', function(app) {
 		setData: function(newData) {
 			if (!newData)
 				return;
-			this.data.pos = newData.pos;
+			this.data.dead = newData.dead;
+			this.checkDeath(this.data.dead);
+			this.data.kills = newData.kills;
+			this.data.deaths = newData.deaths;
+		},
+		updatePos: function(newPos) {
+			if(!newPos || this.entity.getName() === "Player")
+				return;
+			this.data.pos = newPos;
 			this.entity.rigidbody.teleport(this.data.pos);
 		},
 		setState: function(args) {
