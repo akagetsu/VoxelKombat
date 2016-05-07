@@ -56,6 +56,9 @@ pc.script.create("conn", function(app) {
 		},
 		sendState: function(data) {
 			this.socket.emit('player_state', data);
+		},
+		collide: function(data){
+			this.socket.emit('collide', data);
 		}
 	};
 
