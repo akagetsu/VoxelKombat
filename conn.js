@@ -51,6 +51,9 @@ pc.script.create("conn", function(app) {
 		sendPlayerData: function(data) {
 			this.socket.emit('player_update', data);
 		},
+		sendPlayerPos: function(data) {
+			this.socket.emit('player_position', data);
+		},
 		sendState: function(data) {
 			this.socket.emit('player_state', data);
 		}

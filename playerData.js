@@ -61,7 +61,7 @@ pc.script.create('playerData', function(app) {
 			this.data.deaths = newData.deaths;
 		},
 		updatePos: function(newPos) {
-			if(!newPos || this.entity.getName() === "Player")
+			if (!newPos || this.entity.getName() === "Player")
 				return;
 			this.data.pos = newPos;
 			this.entity.rigidbody.teleport(this.data.pos);
@@ -109,6 +109,13 @@ pc.script.create('playerData', function(app) {
 		},
 		getData: function() {
 			return this.data;
+		},
+		getPos: function() {
+			return {
+				gameId: this.data.gameId,
+				uuid: this.data.uuid,
+				pos: this.data.pos
+			};
 		},
 		getState: function() {
 			return this.data.state;

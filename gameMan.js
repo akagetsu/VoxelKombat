@@ -17,6 +17,7 @@ pc.script.create("gameMan", function(app) {
 				return;
 			this.timer += dt;
 			if (parseInt(this.timer) > this.second + 2) {
+				this.positionUpdate();
 				this.second = parseInt(this.timer);
 			}
 		},
@@ -80,6 +81,9 @@ pc.script.create("gameMan", function(app) {
 				delete this.otherPlayers[id];
 			}
 		},
+		positionUpdate: function() {
+			var data = this.player.script.playerData.getPos();
+			this.entity.script.conn.sendPlayerPos(data);
 		},
 		stateDealer: function(data) {
 			if (!this.player || !data)
