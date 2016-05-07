@@ -17,7 +17,6 @@ pc.script.create("gameMan", function(app) {
 				return;
 			this.timer += dt;
 			if (parseInt(this.timer) > this.second + 2) {
-				this.playerUpdate();
 				this.second = parseInt(this.timer);
 			}
 		},
@@ -41,7 +40,8 @@ pc.script.create("gameMan", function(app) {
 			this.entity.script.ui.removeStart();
 			this.entity.script.ui.showHUD(this.player.script.controls);
 
-			this.playerUpdate();
+			var data = this.player.script.playerData.getData();
+			this.entity.script.conn.sendPlayerData(data);
 		},
 		opponentUpdate: function(users) {
 			if (!this.player)
@@ -80,9 +80,6 @@ pc.script.create("gameMan", function(app) {
 				delete this.otherPlayers[id];
 			}
 		},
-		playerUpdate: function() {
-			var data = this.player.script.playerData.getData();
-			this.entity.script.conn.sendPlayerData(data);
 		},
 		stateDealer: function(data) {
 			if (!this.player || !data)
