@@ -5,12 +5,22 @@ pc.script.create("gameMan", function(app) {
 		this.player = null;
 		this.otherPlayers = {};
 		this.gameState = null;
+		this.timer = 0;
+		this.second = 0;
 	};
 	GameMan.prototype = {
 		initialize: function() {
 			this.entity.script.ui.showStart();
 		},
-		update: function(dt) {},
+		update: function(dt) {
+			if(!this.player)
+				return;
+			this.timer += dt;
+			if (parseInt(this.timer) > this.second + 2) {
+				this.playerUpdate();
+				this.second = parseInt(this.timer);
+			}
+		},
 		playerCreation: function(userData) {
 			if (localStorage) {
 				localStorage.setItem("playerData", JSON.stringify(userData, 2, null));
@@ -73,7 +83,6 @@ pc.script.create("gameMan", function(app) {
 		playerUpdate: function() {
 			var data = this.player.script.playerData.getData();
 			this.entity.script.conn.sendPlayerData(data);
-			setTimeout(this.playerUpdate.bind(this), 1000);
 		},
 		stateDealer: function(data) {
 			if (!this.player || !data)
