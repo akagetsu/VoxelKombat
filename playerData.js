@@ -55,8 +55,7 @@ pc.script.create('playerData', function(app) {
 		setData: function(newData) {
 			if (!newData)
 				return;
-			this.data.dead = newData.dead;
-			this.checkDeath(this.data.dead);
+			this.checkDeath(newData.dead);
 			this.data.kills = newData.kills;
 			this.data.deaths = newData.deaths;
 		},
@@ -70,16 +69,13 @@ pc.script.create('playerData', function(app) {
 			this.data.state[args.state] = args.val;
 		},
 		checkDeath: function(dead) {
-			if (dead) {
-				if (this.entity.enabled) {
-					this.entity.enabled = false;
-				}
-				return false;
-			} else {
-				if (!this.entity.enabled) {
-					this.entity.enabled = true;
-				}
-				return true;
+			if (dead && this.entity.enabled) {
+				this.data.dead = true;
+				this.entity.enabled = false;
+			} else if (!dead && !this.entity.enabled) {
+				this.data.dead = false;
+				this.setColorPosition();
+				this.entity.enabled = true;
 			}
 		},
 		setColorMaterial: function(color) {
