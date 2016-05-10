@@ -54,7 +54,8 @@ pc.script.create("gameMan", function(app) {
 
 				var alreadyHere = this.otherPlayers[uuid];
 
-				if (!alreadyHere && !this.player.script.playerData.checkUUID(uuid)) {
+				if (!alreadyHere && !this.player.script.playerData.checkUUID(uuid) &&
+					!this.checkForPlayer(uuid)) {
 					var newPlayer = {};
 					try {
 						newPlayer = app.root.findByName('Player').clone();
@@ -67,10 +68,12 @@ pc.script.create("gameMan", function(app) {
 					app.root.addChild(newPlayer);
 					this.otherPlayers[uuid] = newPlayer;
 					this.otherPlayers[uuid].script.playerData.updatePos(playerData.pos);
-				} else if (alreadyHere && !this.player.script.playerData.checkUUID(uuid)) {
+				} else if (alreadyHere && !this.player.script.playerData.checkUUID(uuid)  &&
+					!this.checkForPlayer(uuid)) {
 					alreadyHere.script.playerData.setData(playerData);
 					alreadyHere.script.playerData.updatePos(playerData.pos);
-				} else if (this.player.script.playerData.checkUUID(uuid)) {
+				} else if (this.player.script.playerData.checkUUID(uuid)  &&
+					this.checkForPlayer(uuid)) {
 					this.player.script.playerData.setData(playerData);
 				}
 			}
@@ -95,6 +98,11 @@ pc.script.create("gameMan", function(app) {
 					opponent.script.playerData.setState(data.args[i]);
 				}
 			}
+		},
+		checkForPlayer: function(uuid) {
+			if(!this.player)
+				return;
+			return uuid === this.player.script.playerData.data.uuid;
 		}
 	};
 
