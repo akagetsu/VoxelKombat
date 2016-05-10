@@ -102,7 +102,7 @@ pc.script.create('playerData', function(app) {
 					this.data.pos = new pc.Vec3(118, 0, 100);
 					break;
 			}
-			this.entity.setPosition(this.data.pos);
+			this.entity.rigidbody.teleport(this.data.pos);
 		},
 		checkUUID: function(uuid) {
 			return this.data.uuid === uuid;
