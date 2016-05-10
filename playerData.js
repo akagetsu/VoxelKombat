@@ -55,7 +55,8 @@ pc.script.create('playerData', function(app) {
 		setData: function(newData) {
 			if (!newData)
 				return;
-			this.checkDeath(newData.dead);
+			this.data.dead = newData.dead;
+			this.checkDeath(this.data.dead);
 			this.data.kills = newData.kills;
 			this.data.deaths = newData.deaths;
 		},
@@ -70,10 +71,8 @@ pc.script.create('playerData', function(app) {
 		},
 		checkDeath: function(dead) {
 			if (dead && this.entity.enabled) {
-				this.data.dead = true;
 				this.entity.enabled = false;
 			} else if (!dead && !this.entity.enabled) {
-				this.data.dead = false;
 				this.setColorPosition();
 				this.entity.enabled = true;
 			}
