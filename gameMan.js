@@ -4,22 +4,14 @@ pc.script.create("gameMan", function(app) {
 		this.entity = entity;
 		this.player = null;
 		this.otherPlayers = {};
-		this.gameState = null;
-		this.timer = 0;
-		this.second = 0;
 	};
 	GameMan.prototype = {
 		initialize: function() {
 			this.entity.script.ui.showStart();
 		},
 		update: function(dt) {
-			if(!this.player)
-				return;
-			this.timer += dt;
-			if (parseInt(this.timer) > this.second + 2) {
-				this.positionUpdate();
-				this.second = parseInt(this.timer);
-			}
+			if(this.player)
+				this.entity.script.conn.sendPlayerData(this.player.script.playerData.getData());
 		},
 		playerCreation: function(userData) {
 			if (localStorage) {
@@ -66,10 +58,9 @@ pc.script.create("gameMan", function(app) {
 					}
 					app.root.addChild(newPlayer);
 					this.otherPlayers[uuid] = newPlayer;
-					this.otherPlayers[uuid].script.playerData.updatePos(playerData.pos);
+					this.otherPlayers[uuid].script.playerData.setData(playerData);
 				} else if (alreadyHere && !this.player.script.playerData.checkUUID(uuid)) {
 					alreadyHere.script.playerData.setData(playerData);
-					alreadyHere.script.playerData.updatePos(playerData.pos);
 				} else if (this.player.script.playerData.checkUUID(uuid)) {
 					this.player.script.playerData.setData(playerData);
 				}
@@ -79,21 +70,6 @@ pc.script.create("gameMan", function(app) {
 			if (this.otherPlayers[id]) {
 				this.otherPlayers[id].destroy();
 				delete this.otherPlayers[id];
-			}
-		},
-		positionUpdate: function() {
-			var data = this.player.script.playerData.getPos();
-			this.entity.script.conn.sendPlayerPos(data);
-		},
-		stateDealer: function(data) {
-			if (!this.player || !data)
-				return;
-			var opponent = this.otherPlayers[data.uuid];
-
-			if (opponent && !this.player.script.playerData.checkUUID(data.uuid) && data.args.length) {
-				for (var i = 0; i < data.args.length; i++) {
-					opponent.script.playerData.setState(data.args[i]);
-				}
 			}
 		}
 	};

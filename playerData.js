@@ -59,15 +59,14 @@ pc.script.create('playerData', function(app) {
 			this.checkDeath(this.data.dead);
 			this.data.kills = newData.kills;
 			this.data.deaths = newData.deaths;
-		},
-		updatePos: function(newPos) {
-			if (!newPos || this.entity.getName() === "Player")
+
+			if(this.entity.getName() === "Player")
 				return;
-			this.data.pos = newPos;
+
+			this.data.state = newData.state;
+			this.data.pos = newData.pos;
 			this.entity.rigidbody.teleport(this.data.pos);
-		},
-		setState: function(args) {
-			this.data.state[args.state] = args.val;
+
 		},
 		checkDeath: function(dead) {
 			if (dead) {
@@ -109,13 +108,6 @@ pc.script.create('playerData', function(app) {
 		},
 		getData: function() {
 			return this.data;
-		},
-		getPos: function() {
-			return {
-				gameId: this.data.gameId,
-				uuid: this.data.uuid,
-				pos: this.data.pos
-			};
 		},
 		getState: function() {
 			return this.data.state;
