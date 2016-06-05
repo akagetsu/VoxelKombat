@@ -69,16 +69,11 @@ pc.script.create('playerData', function(app) {
 
 		},
 		checkDeath: function(dead) {
-			if (dead) {
-				if (this.entity.enabled) {
-					this.entity.enabled = false;
-				}
-				return false;
-			} else {
-				if (!this.entity.enabled) {
-					this.entity.enabled = true;
-				}
-				return true;
+			if (dead && this.entity.enabled) {
+				this.entity.enabled = false;
+			} else if (!dead && !this.entity.enabled) {
+				this.setColorPosition();
+				this.entity.enabled = true;
 			}
 		},
 		setColorMaterial: function(color) {
@@ -101,7 +96,7 @@ pc.script.create('playerData', function(app) {
 					this.data.pos = new pc.Vec3(118, 0, 100);
 					break;
 			}
-			this.entity.setPosition(this.data.pos);
+			this.entity.rigidbody.teleport(this.data.pos);
 		},
 		checkUUID: function(uuid) {
 			return this.data.uuid === uuid;

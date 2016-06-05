@@ -76,11 +76,6 @@ pc.script.create("controls", function(app) {
                 moveForce.set(x, 0, z).normalize().scale(this.power);
                 this.entity.rigidbody.applyForce(moveForce);
             }
-
-            if (this.entity.getPosition().y <= -13 ||
-                this.entity.getPosition().length() >= 400) {
-                this.entity.script.playerData.data.dead = true;
-            }
         },
         postUpdate: function(dt) {
             if (!this.camera || this.entity.getName() != "Player")
