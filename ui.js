@@ -5,6 +5,9 @@ pc.script.attribute("hud", "asset", null, {
 pc.script.attribute("start", "asset", null, {
     type: "html"
 });
+pc.script.attribute("serverError", "asset", null, {
+    type: "html"
+});
 pc.script.attribute("scores", "asset", null, {
     type: "html"
 });
@@ -17,6 +20,7 @@ pc.script.create('ui', function(app) {
     var Ui = function(entity) {
         this.entity = entity;
         this.start = null;
+        this.serverError = null;
         this.hud = null;
         this.playerControls = null;
         this.project = null;
@@ -48,6 +52,15 @@ pc.script.create('ui', function(app) {
                 this.start.innerHTML = asset.resource;
                 this.start.getElementsByClassName("btn-connect")[0].onclick = this.performConn.bind(this);
                 document.body.appendChild(this.start);
+            }
+        },
+        showServerError: function() {
+            var asset = app.assets.get(this.serverError);
+            if(asset) {
+                this.serverError = document.createElement("div");
+                this.serverError.id = "server-error";
+                this.serverError.innerHTML = asset.resource;
+                document.body.appendChild(this.serverError);
             }
         },
         removeStart: function() {
