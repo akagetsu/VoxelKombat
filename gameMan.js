@@ -6,9 +6,7 @@ pc.script.create("gameMan", function(app) {
 		this.otherPlayers = {};
 	};
 	GameMan.prototype = {
-		initialize: function() {
-			this.entity.script.ui.showStart();
-		},
+		initialize: function() {},
 		update: function(dt) {
 			if(this.player)
 				this.entity.script.conn.sendPlayerData(this.player.script.playerData.getData());

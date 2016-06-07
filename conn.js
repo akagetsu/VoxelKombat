@@ -5,40 +5,53 @@ pc.script.create("conn", function(app) {
 	var Conn = function(entity) {
 		this.entity = entity;
 		this.gameMan = {};
+		this.socket = null;
 	};
 	Conn.prototype = {
-		initialize: function() {},
+		initialize: function() {
+			this.socket = io.connect(this.serverip, {
+				reconnection: false
+			});
+
+			this.socket.on('connect_error', function() {
+				console.log('Failed to connect to server.');
+				this.entity.script.ui.showServerError();
+			}.bind(this));
+
+			this.socket.on('connect', function() {
+				this.gameMan = this.entity.script.gameMan;
+				this.entity.script.ui.showStart();
+			}.bind(this));
+
+		},
 		update: function(dt) {},
 		playerConn: function() {
-			this.gameMan = this.entity.script.gameMan;
-			var socket = this.socket = io.connect(this.serverip);
-
 			if (localStorage) {
 				var playerData = JSON.parse(localStorage.getItem("playerData"));
 				if (playerData) {
-					socket.emit('request_join', playerData);
+					this.socket.emit('request_join', playerData);
 				} else {
-					socket.emit('request_join');
+					this.socket.emit('request_join');
 				}
 			}
 
 			// Create player locally
-			socket.on('accept_join', function(data) {
+			this.socket.on('accept_join', function(data) {
 				this.gameMan.playerCreation(data);
 			}.bind(this));
 
 			// Perform updates on opponents
-			socket.on('user_update', function(data) {
+			this.socket.on('user_update', function(data) {
 				this.gameMan.opponentUpdate(data);
 			}.bind(this));
 
 			// Remove opponent upon disconnect
-			socket.on('remove_user', function(data) {
+			this.socket.on('remove_user', function(data) {
 				this.gameMan.opponentRemove(data);
 			}.bind(this));
 
 			// Deal with refusal if server doesn't like you
-			socket.on('refuse_join', function(res) {
+			this.socket.on('refuse_join', function(res) {
 				if (res.status === "Error") {
 					console.error(res.msg);
 				}
@@ -47,7 +60,7 @@ pc.script.create("conn", function(app) {
 		sendPlayerData: function(data) {
 			this.socket.emit('player_update', data);
 		},
-		collide: function(data){
+		collide: function(data) {
 			this.socket.emit('collide', data);
 		}
 	};
