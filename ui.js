@@ -44,6 +44,38 @@ pc.script.create('ui', function(app) {
             this.handleProjection();
             this.handleJump();
         },
+        handleStats: function(users) {
+            if(!this.hud) {
+                return;
+            }
+            for (var uuid in users) {
+                var color = users[uuid].script.playerData.data.color;
+                switch(color) {
+                    case "red":
+                        if(document.body.getElementsByClassName('stats-red')[0].style.display === "") {
+                            document.body.getElementsByClassName('stats-red')[0].style.display = "block";
+                        }
+                        break;
+                    case "blue":
+                        if(document.body.getElementsByClassName('stats-blue')[0].style.display === "") {
+                            document.body.getElementsByClassName('stats-blue')[0].style.display = "block";
+                        }
+                        break;
+                    case "green":
+                        if(document.body.getElementsByClassName('stats-green')[0].style.display === "") {
+                            document.body.getElementsByClassName('stats-green')[0].style.display = "block";
+                        }
+                        break;
+                    case "yellow":
+                        if(document.body.getElementsByClassName('stats-yellow')[0].style.display === "") {
+                            document.body.getElementsByClassName('stats-yellow')[0].style.display = "block";
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        },
         showStart: function() {
             var asset = app.assets.get(this.start);
             if (asset) {
@@ -56,7 +88,7 @@ pc.script.create('ui', function(app) {
         },
         showServerError: function() {
             var asset = app.assets.get(this.serverError);
-            if(asset) {
+            if (asset) {
                 this.serverError = document.createElement("div");
                 this.serverError.id = "server-error";
                 this.serverError.innerHTML = asset.resource;
