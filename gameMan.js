@@ -3,13 +3,15 @@ pc.script.create("gameMan", function(app) {
 	var GameMan = function(entity) {
 		this.entity = entity;
 		this.player = null;
-		this.otherPlayers = {};
+		this.allPlayers = {};
 	};
 	GameMan.prototype = {
 		initialize: function() {},
 		update: function(dt) {
-			if(this.player)
+			if(this.player) {
 				this.entity.script.conn.sendPlayerData(this.player.script.playerData.getData());
+				this.entity.script.ui.handleStats(this.allPlayers);
+			}
 		},
 		playerCreation: function(userData) {
 			if (localStorage) {
@@ -33,6 +35,9 @@ pc.script.create("gameMan", function(app) {
 
 			var data = this.player.script.playerData.getData();
 			this.entity.script.conn.sendPlayerData(data);
+
+			this.allPlayers[data.uuid] = this.player;
+
 		},
 		opponentUpdate: function(users) {
 			if (!this.player)
@@ -42,7 +47,7 @@ pc.script.create("gameMan", function(app) {
 			for (var uuid in users) {
 				var playerData = users[uuid];
 
-				var alreadyHere = this.otherPlayers[uuid];
+				var alreadyHere = this.allPlayers[uuid];
 
 				if (!alreadyHere && !this.player.script.playerData.checkUUID(uuid) &&
 					!this.checkForPlayer(uuid)) {
@@ -56,8 +61,8 @@ pc.script.create("gameMan", function(app) {
 						console.error(e);
 					}
 					app.root.addChild(newPlayer);
-					this.otherPlayers[uuid] = newPlayer;
-					this.otherPlayers[uuid].script.playerData.setData(playerData);
+					this.allPlayers[uuid] = newPlayer;
+					this.allPlayers[uuid].script.playerData.setData(playerData);
 				} else if (alreadyHere && !this.player.script.playerData.checkUUID(uuid) &&
 					!this.checkForPlayer(uuid)) {
 					alreadyHere.script.playerData.setData(playerData);
@@ -68,9 +73,9 @@ pc.script.create("gameMan", function(app) {
 			}
 		},
 		opponentRemove: function(id) {
-			if (this.otherPlayers[id]) {
-				this.otherPlayers[id].destroy();
-				delete this.otherPlayers[id];
+			if (this.allPlayers[id] && !this.player.script.playerData.checkUUID(id)) {
+				this.allPlayers[id].destroy();
+				delete this.allPlayers[id];
 			}
 		},
 		checkForPlayer: function(uuid) {
