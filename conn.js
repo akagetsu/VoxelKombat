@@ -6,6 +6,8 @@ pc.script.create("conn", function(app) {
 		this.entity = entity;
 		this.gameMan = {};
 		this.socket = null;
+		this.startupCamera = null;
+		this.rotation = 1;
 	};
 	Conn.prototype = {
 		initialize: function() {
@@ -23,8 +25,15 @@ pc.script.create("conn", function(app) {
 				this.entity.script.ui.showStart();
 			}.bind(this));
 
+			this.startupCamera = app.root.findByName('StartupCamera');
 		},
-		update: function(dt) {},
+		update: function(dt) {
+			this.rotation += dt * 20;
+			this.startupCamera.setPosition(new pc.Vec3(0, 0, 0));
+			this.startupCamera.setEulerAngles(0, this.rotation, 0);
+			this.startupCamera.translateLocal(0, 200, 300);
+			this.startupCamera.lookAt(new pc.Vec3(0, 0, 0));
+		},
 		playerConn: function() {
 			if (localStorage) {
 				var playerData = JSON.parse(localStorage.getItem("playerData"));
