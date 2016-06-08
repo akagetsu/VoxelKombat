@@ -26,6 +26,7 @@ pc.script.create('ui', function(app) {
         this.project = null;
         this.jumpFuel = null;
         this.animate = false;
+        this.colors = ["yellow", "red", "blue", "green"];
     };
 
     Ui.prototype = {
@@ -45,35 +46,38 @@ pc.script.create('ui', function(app) {
             this.handleJump();
         },
         handleStats: function(users) {
-            if(!this.hud) {
+            if (!this.hud) {
                 return;
             }
-            for (var uuid in users) {
-                var color = users[uuid].script.playerData.data.color;
-                switch(color) {
-                    case "red":
-                        if(document.body.getElementsByClassName('stats-red')[0].style.display === "") {
-                            document.body.getElementsByClassName('stats-red')[0].style.display = "block";
-                        }
-                        break;
-                    case "blue":
-                        if(document.body.getElementsByClassName('stats-blue')[0].style.display === "") {
-                            document.body.getElementsByClassName('stats-blue')[0].style.display = "block";
-                        }
-                        break;
-                    case "green":
-                        if(document.body.getElementsByClassName('stats-green')[0].style.display === "") {
-                            document.body.getElementsByClassName('stats-green')[0].style.display = "block";
-                        }
-                        break;
-                    case "yellow":
-                        if(document.body.getElementsByClassName('stats-yellow')[0].style.display === "") {
-                            document.body.getElementsByClassName('stats-yellow')[0].style.display = "block";
-                        }
-                        break;
-                    default:
-                        break;
+
+            for (var color of this.colors) {
+                var user = users[color];
+                var colorEl = document.body.getElementsByClassName('stats-' + color)[0];
+                var rhombus = colorEl.children[0];
+                var score = colorEl.children[1];
+
+                if (!colorEl) {
+                    return;
                 }
+
+                if (user && colorEl.classList.contains("hidden")) {
+                    colorEl.classList.remove("hidden");
+                }
+                if (!user && !colorEl.classList.contains("hidden")) {
+                    colorEl.classList.add("hidden");
+                }
+                if (!user) {
+                    return;
+                }
+
+                if (user.dead && !rhombus.classList.contains("dead")) {
+                    rhombus.classList.add("dead");
+                }
+                if (!user.dead && rhombus.classList.contains("dead")) {
+                    rhombus.classList.remove("dead");
+                }
+
+                score.innerText = user.kills + "/" + user.deaths;
             }
         },
         showStart: function() {

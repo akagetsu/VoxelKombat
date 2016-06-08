@@ -8,9 +8,9 @@ pc.script.create("gameMan", function(app) {
 	GameMan.prototype = {
 		initialize: function() {},
 		update: function(dt) {
-			if(this.player) {
+			if (this.player) {
 				this.entity.script.conn.sendPlayerData(this.player.script.playerData.getData());
-				this.entity.script.ui.handleStats(this.allPlayers);
+				this.dealWithUI();
 			}
 		},
 		playerCreation: function(userData) {
@@ -79,9 +79,21 @@ pc.script.create("gameMan", function(app) {
 			}
 		},
 		checkForPlayer: function(uuid) {
-			if(!this.player)
+			if (!this.player)
 				return;
 			return uuid === this.player.script.playerData.data.uuid;
+		},
+		dealWithUI: function() {
+			var uiStats = {};
+			for (var key in this.allPlayers) {
+				var playerData = this.allPlayers[key].script.playerData.data;
+				uiStats[playerData.color] = {
+					kills: playerData.kills,
+					deaths: playerData.deaths,
+					dead: playerData.dead
+				};
+			}
+			this.entity.script.ui.handleStats(uiStats);
 		}
 	};
 
