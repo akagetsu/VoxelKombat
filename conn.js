@@ -1,6 +1,6 @@
 // conn.js
 // This whole things needs some serious refactoring and modularity BRO
-pc.script.attribute('serverip', 'string', "http://localhost:3000");
+pc.script.attribute('serverip', 'string', "https://localhost:3000");
 pc.script.create("conn", function(app) {
 	var Conn = function(entity) {
 		this.entity = entity;
@@ -12,6 +12,7 @@ pc.script.create("conn", function(app) {
 	Conn.prototype = {
 		initialize: function() {
 			this.socket = io.connect(this.serverip, {
+				secure: true,
 				reconnection: false
 			});
 
