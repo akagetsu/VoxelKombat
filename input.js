@@ -46,6 +46,9 @@ pc.script.create("input", function(app) {
 			if (event.key === pc.KEY_D) {
 				this.playerState.rig = true;
 			}
+			if (event.key === pc.KEY_P) {
+				this.initiateForm();
+			}
 		},
 		onKeyUp: function(event) {
 			if (!this.playerState)
@@ -101,6 +104,10 @@ pc.script.create("input", function(app) {
 			if (event.button === pc.MOUSEBUTTON_LEFT) {
 				this.playerState.atk = false;
 			}
+		},
+		initiateForm: function() {
+			var win = window.open('http://goo.gl/forms/rgovL9fVHudjDWC63', '_blank');
+			win.focus();
 		}
 	};
 
